@@ -1,7 +1,5 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    // 11/23/25 12:08 AM, We split into 4 branches and caused a massive mess. We are now going to revert back to a singular branch. This here serves to commemorate the 2 hours i work i spent typing git command after git command to fix this stupid issue.
     "version": "0.2.0",
     "configurations": [
         {

@@ -1,7 +1,7 @@
 @echo off
 git config core.ignorecase false
-:: echo Updating local branch
-:: git pull
+echo Updating local branch
+git pull origin main
 echo.
 set /p msg=Enter description of changes: 
 if "%msg%"=="" (
