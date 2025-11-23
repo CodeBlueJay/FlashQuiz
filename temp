@@ -24,6 +24,7 @@ public class Accuracy extends VBox {
     private double time;
     private EXPBarUI expBar;
     private Timeline timeline;
+    private int timeLeft;
     // more gui components
     private Label accuracylabel = new Label("Accuracy");
     private VBox container = new VBox(8);
@@ -73,20 +74,21 @@ public class Accuracy extends VBox {
         start.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                ObjectProperty<java.time.Duration> remainingTime = new ObjectProperty<java.time.Duration>(java.time.Duration.ofSeconds(5));
+                start.setDisable(true);
                 if (timeline != null)
                     timeline.stop();
                 timeline = new Timeline();
-                timeline.gechhtKeyFrames().add(
-                    new KeyFrame(Duration.seconds(time), (ActionEvent event) -> 
-                    showTimer.setText()));
+                timeline.getKeyFrames().add(
+                    new KeyFrame(Duration.seconds(1), (ActionEvent event) -> {
+                    showTimer.setText(String.valueOf(timeLeft));
+                    timeLeft--;
+                    if (timeLeft < 0) {
+                        timeline.stop();
+                        start.setDisable(false);
                     }
-                    ));
+                    }));
                 timeline.play();
             }
         });
     }   
-    }
-
-
 }

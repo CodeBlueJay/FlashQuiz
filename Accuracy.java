@@ -20,8 +20,6 @@ public class Accuracy extends VBox {
     private int questionsCorrect;
     private double time;
     private EXPBarUI expBar;
-    private String correctAnswer;
-    private String ans;
     private Timeline timeline;
     private boolean started;
     private Random rng = new Random();
@@ -29,16 +27,12 @@ public class Accuracy extends VBox {
     // more gui components
     private Label accuracylabel = new Label("Accuracy");
     private VBox container = new VBox(8);
-    private Label feedback = new Label();
     private TextField answer = new TextField();
     private Button submit = new Button("Submit");
     private Button start = new Button("Start");
     private Label showTimer = new Label();
-    private HBox buttonBox = new HBox(2);
-    private Label score = new Label("Score: " + questionsCorrect);
+    private Label score = new Label("Score:");
     private Label definition = new Label("Definition: ");
-    private Soundplayer soundplayer = new Soundplayer();
-    private Button next = new Button("Next");
     Font microwave;
     private HBox timerButtons = new HBox(4);
     {
@@ -65,19 +59,17 @@ public class Accuracy extends VBox {
         showTimer.setText(String.format("%.2f", time));
         showTimer.getStyleClass().add("timer");
         score.getStyleClass().add("score");
-        submit.setDisable(!started);
         if (microwave != null) {
             showTimer.setFont(microwave);
         }
-        buttonBox.getChildren().addAll(submit, next);
-        container.getChildren().addAll(answer, definition, feedback, buttonBox);
+        container.getChildren().addAll(answer, definition, submit);
         timerButtons.getChildren().addAll(showTimer, start);
         getChildren().addAll(accuracylabel, score, timerButtons, container);
 
         submit.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                ans = "";
+                String ans = "";
                 if (!(answer.getText() == null)) {
                     ans = answer.getText();
                 } else {
@@ -122,8 +114,7 @@ public class Accuracy extends VBox {
                 mainLoop();
                 started = true;
                 answer.setDisable(false);
-                submit.setDisable(false);
-                start.setDisable(true);
+                //start.setDisable(true);
                 answer.requestFocus();
                 if (timeline != null)
                     timeline.stop();
@@ -153,6 +144,5 @@ public class Accuracy extends VBox {
         lastIndex = index;
         correctAnswer = words.get(index);
         definition.setText("Definition: " + meanings.get(index));
-        
     }
 }

@@ -42,7 +42,15 @@ public class Learn extends VBox {
     private int totalCorrect = 0;
     private EXPBarUI expBar;
     private Random rng = new Random();
-    private Soundplayer soundPlayer = new Soundplayer();
+    // SoUnD EfFeCtS yUpEe
+    File correct = new File("sounds/correct.mp3");
+    File wrong = new File("sounds/wrong.mp3");
+    String correctUri = correct.toURI().toString();
+    String wrongUri = wrong.toURI().toString();
+    Media correctSound = new Media(correctUri);
+    Media wrongSound = new Media(wrongUri);
+    MediaPlayer correctPlayer = new MediaPlayer(correctSound);
+    MediaPlayer wrongPlayer = new MediaPlayer(wrongSound);
 
     public Learn(ArrayList<String> w, ArrayList<Double> we, ArrayList<String> d, EXPBarUI exp) {
         text = false;
@@ -109,6 +117,12 @@ public class Learn extends VBox {
 
         getChildren().addAll(titleLabel, modeToggle, progressLabel, prompt, choicesBox, freeBox, feedback, nextBtn);
         nextQuestion();
+    }
+
+    private void playSound(MediaPlayer player) {
+        player.stop();
+        player.setStartTime(Duration.ZERO);
+        player.play();
     }
 
     public boolean isText() {
@@ -234,12 +248,12 @@ public class Learn extends VBox {
             totalCorrect++;
             feedback.setText("Correct!");
             adjustWeight(currentIndex, true);
-            soundPlayer.playCorrect();
+            playSound(correctPlayer);
             expBar.addXP(5); //temp value for actually leveling up
         } else {
             feedback.setText("Incorrect. Correct answer: " + correct);
             adjustWeight(currentIndex, false);
-            soundPlayer.playWrong();
+            playSound(wrongPlayer);
         }
         nextBtn.setDisable(false);
         updateProgressLabel();

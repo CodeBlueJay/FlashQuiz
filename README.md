@@ -1,115 +1,54 @@
-# Flashcard Quiz Program
+# ✨Flashcard Quiz Program✨
 
-Modern, lightweight flashcard study app built with Java + JavaFX.
+**Problem:** Studying vocabulary or facts gets boring (Or just studying in general), and some people may not get much value out of just staring at terms and definitions.
 
-Features
+**Application Description:** Our program will be a studying-based application where the user inputs terms they would like to memorize, and answers they need to memorize that correspond with each term. The program will have different options when it comes to the method of studying, similar to Quizlet, Anki, and other flashcard-based study websites, potentially including games, matching, and randomized tests on each of the flashcards.
 
-- Create and manage multiple flashcard sets
-- Multiple study modes: Learn, Matching, Accuracy challenge, Boss Battle
-- XP / leveling systems and visual progress bar
-- Simple, keyboard-friendly UI with editable sets
+## Class Breakdown
 
-Getting started
+### Class: Flashcards
+**Variables:**
+1. *IDs*: Holds an array of IDs that each correspond to a different flashcard set
+2. *Flashcard set*: 2D Array that holds a list of terms and definitions for each array
+- Input system for flashcards will be based on a max of 100 flashcards, where a base array of length 100 will be created, and a new array will be created if the user does not use up all 100 flashcard slots.
 
-1. Install Java 17+ (or the version your `run.bat` expects).
+**Potential Methods:**
+1. *Sort Flashcards*: Takes in a parameter of what the user would like to sort the flashcards based off of (alphabetical order, etc.), and re-orders the array with that new sorting system.
+2. *Get Flashcard Set*: Returns flashcard set
+3. *Update Flashcard*: Updates specified values at inputted indices of the flashcards
+4. *Add Flashcard Set*: Creates a new ID and flashcard set and adds it to the array of flashcard set IDs
+5. *Get Flashcard*: Returns flashcard from inputted index from current flashcard set 
 
-1. From project root run in PowerShell:
+Side note: Must implement a way to keep track of which flashcard set is currently being viewed, most likely an input in the constructor
 
-```powershell
-.\run.bat
-```
+**Flashcards and Flashcard IDs arrays will be class variables, to allow the user to access previous flashcard sets without re-creating them.
 
-1. If you prefer to run manually, compile and run with module path to JavaFX libs (example):
+### Class: Games / Study Options
+**Game modes for studying**
+1. *Standard learn option* (similar to quizlet, both typed and mc answering capabilities) - Shows the definition OR answer and then either a textbox or mcq answer choices ****This will be where the weights likely come in****
+2. *Match* (Connect with wires among us wires basically) - Shows different options, and the answers, and connect all of them correctly, get a set amount of exp.
+3. *“Boss Battle”* - A lightweight boss-battle styled event where the player answers questions correctly to damage the “AI” boss, which has a 50% chance of doing damage back, both sides have 5-10 lives to ensure playtime doesn’t go on for too long. Also a time limit for answers, maybe 5-10 seconds.
+4. *Accuracy Challenge* - All typed answers, MUST be correctly typed 100%, counts how many the user is able to do in a row. There is a time limit that slowly decreases by 0.2 seconds, with the base being 5 or something. High score is saved.
+- Includes attributes for user data related to progression
+- XP will likely be a class variable
+- Level as well
 
-```bash
-javac -d out --module-path javafx-sdk/lib --add-modules javafx.controls,javafx.fxml src\*.java
-java --module-path javafx-sdk/lib --add-modules javafx.controls,javafx.fxml -cp out Main
-```
+**Methods**
+1. *Get data*: Shows the user’s data
+2. *Add xp (amount)*: Adds xp to the users profile, also calculates leveling
+3. *Select gamemode(String)*: selects the gamemode
 
-How the project is organized
+Side Note: Will take in a Flashcard object as a parameter for use in methods
 
-- `Main.java` – application entry, navigation and screen builders
-- `Flashcards.java` – flashcard set model and helpers
-- `Sets.java` – UI for browsing and selecting sets
-- `Learn.java`, `Matching.java`, `Accuracy.java`, `Boss.java` – study modes
-- `styles.css` – theme and look-and-feel
-- `fonts/` and `sounds/` – assets
-
-Set editor (what to expect)
-
-Select a set from `Sets` to open an editor where you can:
-
-- Edit the set title
-- Add / edit / delete term–definition pairs
-- Return to the Sets view
-
-Roadmap ideas
-
-- Drag & drop card reordering
-- Import/export (CSV / Anki format)
-- User profiles and persistent local storage
-
-## Problem
-
-Studying vocabulary or facts can become boring and ineffective when presented as static lists. This application aims to make studying more engaging by providing multiple study modes, progress tracking, and interactive UI elements.
-
-## Application description
-
-Users create sets of terms and definitions for study. The app offers several study methods (Learn, Matching, Accuracy challenge, Boss Battle) and additional features such as XP, leveling, and a set editor. The goal is to present flashcards in ways that encourage repetition, variety, and game-like progression.
-
-## Class breakdown
-
-### Flashcards
-
-- Variables
-
-
-  - `IDs`: holds a list of `Flashcards` objects (each is a set)
-  - `titles`: human-readable title for each set
-  - `flashcardSet`: internal 2D ArrayList storing `terms` and `definitions`
-  - `weights`: per-card weights for adaptive learning
-
-- Core behavior and helpers
-
-
-  - `Flashcards(ArrayList<String> terms, ArrayList<String> definitions)` — constructor
-  - `sortFlashcards()` — sorts the set alphabetically by term
-  - `getFlashcardSet()` — returns internal 2D array structure
-  - `toPairList()` — returns an ArrayList of `[term, definition]` pairs
-  - `getSize()` — returns number of cards
-  - `updateFlashcardSet(...)` overloads — add, remove, or replace a card
-  - `addFlashcardSet(Flashcards card[, String title])` — register a new set globally
-  - `allSetsAsPairs()` — helper returning all sets as lists of pairs
-
-### Potential methods and notes
-
-  - Sort by different criteria (alphabetical, weights)
-  - Export/import sets (CSV/Anki-style) for portability
-  - Track which set is currently selected in the app state
-
-## Games / Study options
-
-- Standard Learn: typed answers and multiple-choice variants; uses weights for adaptive order
-- Match: pair terms and definitions in a timed or scored matching mode
-- Boss Battle: answer questions to damage a boss; boss can damage back; small life pools and time limits
-- Accuracy Challenge: consecutive correct typed answers under a time limit that tightens as the run continues; high score saved
-
-### Data and progression
-
-  - XP and level tracking
-  - Per-user or per-session statistics (future enhancement)
-
-## Features to add (original list)
-
+## Features to add
 1. Randomize order
-1. Adaptive learning (weights)
-1. Track correct answers and show a score
-1. Save cards for re-use
-1. Structure flash-card learning methods around a game/objective theme
-1. Implement a way of holding multiple flashcard sets
+2. Adaptive Learning (weights)
+3. Track correct answers and show a score
+4. Save cards for re-use
+5. Structure flash-card learning methods around a game / accomplish an objective theme.
+6. Implement a way of holding multiple flashcard sets.
 
 ## Tools
-
 - VSCode (IDE)
 - JavaFX (GUI Library)
-- Git (Version Control)
+- Git (Version Control and Remote Collaborative Programming)

@@ -25,6 +25,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import javafx.scene.Node;
 
+
 public class Matching extends VBox {
     private ArrayList<String> words;
     private ArrayList<String> meanings;
@@ -33,38 +34,28 @@ public class Matching extends VBox {
     private Button wordButton = new Button();
     private Button meaningButton = new Button();
 
+
     public Matching(ArrayList<String> w, ArrayList<String> m) {
         this.words = w;
         this.meanings = m;
-        
+       
         if (words.size() != meanings.size())
             bvox.getChildren().add(fail);
         else {
             for (int i = 0; i < words.size(); i++) {
                 wordButton = new Button(words.get(i));
                 meaningButton = new Button(meanings.get(i));
-                //add css for buttons format
+                //just style buttons with css later
                 HBox setWords = new HBox(4);
                 setWords.getChildren().addAll(wordButton, meaningButton);
                 bvox.getChildren().addAll(setWords);
             }
         }
         getChildren().add(bvox);
+    }
 
-        boolean check1 = false;
-        boolean check2 = false;
-        // wordButton.setOnAction(new EventHandler<ActionEvent>(){
-        //     @Override
-        //     public void handle(ActionEvent e) {
-        //         check1 = true;
-        //         wordButton
-        //     }
-        // });
 
-        
-        
-
-    /** Needs to acount for: 
+    /** Needs to acount for:
      * Creating buttons
      * Actions that occur on button click
      * Setting buttons equal to term / definition
@@ -73,6 +64,7 @@ public class Matching extends VBox {
      * E
      * Match action (clicking one button, then clicking another on the other side, without issue occuring)
      * Check action (Checking to see if buttons that were clicked are a correct pair)
-     * */ 
-    }
+     * */
+
+
 }

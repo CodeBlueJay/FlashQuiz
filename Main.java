@@ -216,11 +216,12 @@ public class Main extends Application {
         return learnView;
     }
 
-        private Node buildMatchingScreen() {
+    private Node buildMatchingScreen() {
         VBox box = new VBox(10);
         box.setPadding(new Insets(16));
         Label title = new Label("Matching");
         if (currentSet == null || currentSet.getFlashcardSet() == null || currentSet.getFlashcardSet().size() < 2) {
+            box.getChildren().addAll(title, new Label("Pick a set on Home first."));
             return box;
         }
         int count = 0;
@@ -230,9 +231,8 @@ public class Main extends Application {
                 count = s.get(0).size();
             }
         } catch (Exception ignored) {}
-        ArrayList<ArrayList<String>> cs = currentSet.getFlashcardSet(); 
-        Matching matchview = new Matching(cs.get(0), cs.get(1));
-        return matchview;
+        box.getChildren().addAll(title, new Label("Ready with " + count + " cards (build UI next)"));
+        return box;
     }
 
     private Node buildBossScreen() {
