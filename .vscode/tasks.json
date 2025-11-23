@@ -1,0 +1,49 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run Program",
+      "type": "shell",
+      "command": "${workspaceFolder}\\run.bat",
+      "windows": {
+        "command": "${workspaceFolder}\\run.bat"
+      },
+      "linux": {
+        "command": "${workspaceFolder}/run.sh"
+      },
+      "osx": {
+        "command": "${workspaceFolder}/run.sh"
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "Push to Repository",
+      "type": "shell",
+      "command": "${workspaceFolder}\\push.bat",
+      "windows": {
+        "command": "${workspaceFolder}\\push.bat"
+      },
+      "linux": {
+        "command": "${workspaceFolder}/push.sh"
+      },
+      "osx": {
+        "command": "${workspaceFolder}/push.sh"
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    }
+  ]
+}
