@@ -19,6 +19,7 @@ public class Accuracy extends VBox {
     private ArrayList<Double> weights;
     private int questionsCorrect;
     private double time;
+    private double startTime = 7.0;
     private EXPBarUI expBar;
     private String correctAnswer;
     private String ans;
@@ -50,7 +51,7 @@ public class Accuracy extends VBox {
         meanings = m;
         weights = we;
         questionsCorrect = 0;
-        time = 7.0;
+        time = startTime;
         started = false;
         expBar = exp;
         timeline = new Timeline();
@@ -125,15 +126,26 @@ public class Accuracy extends VBox {
                 submit.setDisable(false);
                 start.setDisable(true);
                 answer.requestFocus();
-                if (timeline != null)
+                if (timeline != null) {
                     timeline.stop();
-                timeline = new Timeline();
-                timeline.getKeyFrames().add(  
-                    new KeyFrame(Duration.seconds(time + 1), 
-                        e -> {
-                            feedback.setText("Time's Up!");
-                        }
-                    ));
+                }
+                time = startTime;
+                showTimer.setText(String.format("%.2f", time));
+                timeline = new Timeline(new KeyFrame(Duration.millis(100), ev -> {
+                    time -= 0.1;
+                    if (time <= 0) {
+                        showTimer.setText("0.00");
+                        timeline.stop();
+                        feedback.setText("Time's Up!");
+                        answer.setDisable(true);
+                        submit.setDisable(true);
+                        start.setDisable(false);
+                        started = false;
+                    } else {
+                        showTimer.setText(String.format("%.2f", time));
+                    }
+                }));
+                timeline.setCycleCount(Timeline.INDEFINITE);
                 timeline.play();
             }
         });
