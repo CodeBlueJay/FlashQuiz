@@ -32,6 +32,8 @@ public class Matching extends VBox {
     private Label fail = new Label("unequal # of words and definitions");
     private Button wordButton = new Button();
     private Button meaningButton = new Button();
+    private ArrayList<Button> wordButtonList = new ArrayList<Button>();
+    private ArrayList<Button> meaningButtonList = new ArrayList<Button>();
 
     public Matching(ArrayList<String> w, ArrayList<String> m) {
         this.words = w;
@@ -43,6 +45,8 @@ public class Matching extends VBox {
             for (int i = 0; i < words.size(); i++) {
                 wordButton = new Button(words.get(i));
                 meaningButton = new Button(meanings.get(i));
+                wordButtonList.add(wordButton);
+                meaningButtonList.add(meaningButton);
                 //add css for buttons format
                 HBox setWords = new HBox(4);
                 setWords.getChildren().addAll(wordButton, meaningButton);
@@ -53,13 +57,13 @@ public class Matching extends VBox {
 
         boolean check1 = false;
         boolean check2 = false;
-        // wordButton.setOnAction(new EventHandler<ActionEvent>(){
-        //     @Override
-        //     public void handle(ActionEvent e) {
-        //         check1 = true;
-        //         wordButton
-        //     }
-        // });
+        wordButton.setOnAction(new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent e) {
+                check1 = true;
+                wordButton
+            }
+        });
 
         
         
@@ -71,8 +75,28 @@ public class Matching extends VBox {
      * Setting button pairs (one term on the left side that corresponds with term on the right side)
      * Removal of buttons that were clicked
      * E
-     * Match action (clicking one button, then clicking another on the other side, without issue occuring)
+     * Match action (clicking one button, then clicking another on the other side, runs check after completed)
      * Check action (Checking to see if buttons that were clicked are a correct pair)
      * */ 
+    }
+
+    public boolean check(String wordClicked, String definitionClicked){
+        int ind1 = words.indexOf(wordClicked);
+        int ind2 = meanings.indexOf(definitionClicked);
+        return(ind1 == ind2);
+    }
+    
+    public void match(Button button1, Button button2){
+        String term = button1.getText();
+        String definition = button2.getText();
+        boolean correct = check(term, definition);
+        if (correct){
+            // display "Well Done!" or some other correct text onto screen
+            // remove button1 and button2
+        }
+        else{
+            // display incorrect text onto screen
+            // do NOT remove button1 and button2
+        }
     }
 }
