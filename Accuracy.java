@@ -27,6 +27,7 @@ public class Accuracy extends VBox {
     private boolean started;
     private Random rng = new Random();
     private int lastIndex = -1;
+    private double addTime;
     // more gui components
     private Label accuracylabel = new Label("Accuracy");
     private VBox container = new VBox(8);
@@ -45,7 +46,7 @@ public class Accuracy extends VBox {
     {
         microwave = Font.loadFont("file:fonts/microwave.ttf", 36);
     }
-    
+
     public Accuracy(ArrayList<String> w, ArrayList<String> m, ArrayList<Double> we, EXPBarUI exp) {
         words = w;
         meanings = m;
@@ -55,6 +56,7 @@ public class Accuracy extends VBox {
         started = false;
         expBar = exp;
         timeline = new Timeline();
+        addTime = 10;
         setSpacing(10);
         setPadding(new Insets(16));
         answer.getStyleClass().add("answer");
@@ -84,9 +86,13 @@ public class Accuracy extends VBox {
                 } else {
                     ans = "";
                 }
+                if (addTime > 3) {
+                    addTime -= 0.5;
+                }
                 answer.setText(ans);
                 if (ans.toLowerCase().equals(correctAnswer.toLowerCase())) {
                     questionsCorrect++;
+                    time += addTime;
                     score.setText("Score: " + questionsCorrect);
                     expBar.addXP(10);
                     feedback.setText("Correct!");
