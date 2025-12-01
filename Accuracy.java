@@ -131,8 +131,8 @@ public class Accuracy extends VBox {
                 }
                 time = startTime;
                 showTimer.setText(String.format("%.2f", time));
-                timeline = new Timeline(new KeyFrame(Duration.millis(100), ev -> {
-                    time -= 0.1;
+                timeline = new Timeline(new KeyFrame(Duration.millis(10), ev -> {
+                    time -= 0.01;
                     if (time <= 0) {
                         showTimer.setText("0.00");
                         timeline.stop();
