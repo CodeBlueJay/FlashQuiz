@@ -1,2 +1,2 @@
-javac --module-path ".\javafx-backup\javafx-sdk-25.0.1\lib" --add-modules javafx.controls,javafx.fxml,javafx.media -d out Main.java
-java --enable-native-access=javafx.graphics --enable-native-access=javafx.media --module-path ".\javafx-backup\javafx-sdk-25.0.1\lib" --add-modules javafx.controls,javafx.fxml,javafx.media -cp out Main
+javac --module-path ".\javafx-backup\javafx-sdk-17.0.17\lib" --add-modules javafx.controls,javafx.fxml,javafx.media -d out Main.java
+java --enable-native-access=javafx.graphics --enable-native-access=javafx.media --module-path ".\javafx-backup\javafx-sdk-17.0.17\lib" --add-modules javafx.controls,javafx.fxml,javafx.media -cp out Main
