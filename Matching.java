@@ -55,15 +55,15 @@ public class Matching extends VBox {
         }
         getChildren().add(bvox);
 
-        // boolean check1 = false;
-        // boolean check2 = false;
-        // wordButton.setOnAction(new EventHandler<ActionEvent>(){
-        //     @Override
-        //     public void handle(ActionEvent e) {
-        //         check1 = true;
-        //         wordButton
-        //     }
-        // });
+        boolean check1 = false;
+        boolean check2 = false;
+        wordButton.setOnAction(new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent e) {
+                check1 = true;
+                wordButton
+            }
+        });
 
         
         
