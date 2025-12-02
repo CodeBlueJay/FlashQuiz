@@ -28,6 +28,7 @@ public class Accuracy extends VBox {
     private Random rng = new Random();
     private int lastIndex = -1;
     private double addTime;
+    private int XPadd;
     // more gui components
     private Label accuracylabel = new Label("Accuracy");
     private VBox container = new VBox(8);
@@ -57,6 +58,7 @@ public class Accuracy extends VBox {
         expBar = exp;
         timeline = new Timeline();
         addTime = 10;
+        XPadd = 5;
         setSpacing(10);
         setPadding(new Insets(16));
         answer.getStyleClass().add("answer");
@@ -86,15 +88,16 @@ public class Accuracy extends VBox {
                 } else {
                     ans = "";
                 }
-                if (addTime > 3) {
-                    addTime -= 0.5;
-                }
                 answer.setText(ans);
                 if (ans.toLowerCase().equals(correctAnswer.toLowerCase())) {
+                    if (addTime > 3) {
+                        addTime -= 0.5;
+                    }
                     questionsCorrect++;
                     time += addTime;
                     score.setText("Score: " + questionsCorrect);
-                    expBar.addXP(10);
+                    expBar.addXP(XPadd);
+                    XPadd += 5;
                     feedback.setText("Correct!");
                     soundplayer.playCorrect();
                     next.setVisible(true);
