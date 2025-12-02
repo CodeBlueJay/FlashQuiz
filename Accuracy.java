@@ -154,7 +154,7 @@ public class Accuracy extends VBox {
                         showTimer.setText(String.format("%.2f", time));
                     }
                 }));
-                timeline.setCycleCount(Timeline.INDEFINITE);
+                timeline.setCycleCount(Timeline.INDEFINITE); 
                 timeline.play();
             }
         });

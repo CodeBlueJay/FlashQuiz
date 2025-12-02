@@ -34,6 +34,10 @@ public class Matching extends VBox {
     private Button meaningButton = new Button();
     private ArrayList<Button> wordButtonList = new ArrayList<Button>();
     private ArrayList<Button> meaningButtonList = new ArrayList<Button>();
+    private Button selectedWord;
+    private Button selectedMeaning;
+    // test label 
+    private Label test = new Label("test");
 
     public Matching(ArrayList<String> w, ArrayList<String> m) {
         this.words = w;
@@ -48,24 +52,65 @@ public class Matching extends VBox {
                 wordButtonList.add(wordButton);
                 meaningButtonList.add(meaningButton);
                 //add css for buttons format
+                wordButton.setOnAction(new EventHandler<ActionEvent>(){
+                    @Override
+                    public void handle(ActionEvent e) {
+                        test.setText("word button clicked: " + wordButton.getText());
+                    }
+                });
+                meaningButton.setOnAction(new EventHandler<ActionEvent>(){
+                    @Override
+                    public void handle(ActionEvent e) {
+                        test.setText("meaning button clicked: " + meaningButton.getText());
+                    }
+                });
                 HBox setWords = new HBox(4);
                 setWords.getChildren().addAll(wordButton, meaningButton);
-                bvox.getChildren().addAll(setWords);
+                bvox.getChildren().addAll(setWords, text);
             }
         }
         getChildren().add(bvox);
 
         boolean check1 = false;
         boolean check2 = false;
-        wordButton.setOnAction(new EventHandler<ActionEvent>(){
-            @Override
-            public void handle(ActionEvent e) {
-                check1 = true;
-                wordButton
-            }
-        });
-
+        for (int i = 0; i < choiceBtns.length; i++) {
+            wordButtonList.get(i).setOnAction(new EventHandler<ActionEvent>(){
+                @Override
+                public void handle(ActionEvent e) {
+                    check1 = true;
+                    meaningButtonList.get(i).setOnAction(new EventHandler<ActionEvent>(){
+                        @Override
+                        public void handle(ActionEvent e) {
+                            check2 = true;
+                            meaningButtonList.get(i).setVisible(false);
+                            wordButtonList.get(i).setVisible(false);
+                        }
+                    });
+                }
+            });
+        }
         
+        // wordButton.setOnAction(new EventHandler<ActionEvent>(){
+        //     @Override
+        //     public void handle(ActionEvent e) {
+        //         check1 = true;
+        //         wordButtonList.
+        //     }
+        // });
+
+        // EventHandler<ActionEvent> choiceHandler = new EventHandler<ActionEvent>() {
+        //     @Override
+        //     public void handle(ActionEvent e) {
+        //         if (!awaitingAnswer) return;
+        //         Button b = (Button) e.getSource();
+        //         String chosen = b.getText();
+        //         evaluateAnswer(chosen);
+        //     }
+        // };
+        // for (int i = 0; i < choiceBtns.length; i++) {
+        //     choiceBtns[i].setOnAction(choiceHandler);
+        // }
+
         
 
     /** Needs to acount for: 
@@ -96,7 +141,7 @@ public class Matching extends VBox {
         }
         else{
             // display incorrect text onto screen
-            // do NOT remove button1 and button2
+            // do NOT remove button1 and button2  
         }
     }
 }

@@ -250,8 +250,9 @@ public class Main extends Application {
                 count = s.get(0).size();
             }
         } catch (Exception ignored) {}
-        box.getChildren().addAll(title, new Label("Ready with " + count + " cards (boss mechanics TBD)"));
-        return box;
+        boolean isMCQ =  
+        Boss bossview = new Boss(cs.get(0), cs.get(1), )
+        return ;
     }
 
     private Node buildAccuracyScreen() {
