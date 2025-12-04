@@ -34,18 +34,11 @@ public class Matching extends VBox {
     private Button meaningButton = new Button();
     private ArrayList<Button> wordButtonList = new ArrayList<Button>();
     private ArrayList<Button> meaningButtonList = new ArrayList<Button>();
-    private Button selectedWord;
-    private Button selectedMeaning;
-    private int selectedWordIndex = -1;
-    private int selectedMeaningIndex = -1;
-    // gui components
-    private Label matchingLabel = new Label("Matching");
 
     public Matching(ArrayList<String> w, ArrayList<String> m) {
         this.words = w;
         this.meanings = m;
-        setSpacing(10);
-        setPadding(new Insets(16));
+        
         if (words.size() != meanings.size())
             bvox.getChildren().add(fail);
         else {
@@ -54,82 +47,35 @@ public class Matching extends VBox {
                 meaningButton = new Button(meanings.get(i));
                 wordButtonList.add(wordButton);
                 meaningButtonList.add(meaningButton);
+                //add css for buttons format
                 HBox setWords = new HBox(4);
                 setWords.getChildren().addAll(wordButton, meaningButton);
-                bvox.getChildren().add(setWords);
+                bvox.getChildren().addAll(setWords);
             }
         }
-        getChildren().addAll(matchingLabel, bvox);
+        getChildren().add(bvox);
 
-        for (int i = 0; i < wordButtonList.size(); i++) {
-            final int idx = i;
-            Button wb = wordButtonList.get(i);
-            wb.setOnAction(e -> {
-                selectedWordIndex = idx;
-                selectedWord = wb;
-                wb.getStyleClass().add("selected");
-                if (selectedMeaningIndex >= 0 && selectedMeaning != null) {
-                    boolean correct = check(selectedWord.getText(), selectedMeaning.getText());
-                    if (correct) {
-                        selectedWord.setVisible(false);
-                        selectedMeaning.setVisible(false);
-                    } else {
-                        selectedWord.getStyleClass().remove("selected");
-                        selectedMeaning.getStyleClass().remove("selected");
-                    }
-                    selectedWord = null;
-                    selectedMeaning = null;
-                    selectedWordIndex = -1;
-                    selectedMeaningIndex = -1;
+        boolean check1 = false;
+        boolean check2 = false;
+
+        for (int i = 0; i < choiceBtns.length; i++) {
+            wordButtonList.get(i).setOnAction(new EventHandler<ActionEvent>(){
+                @Override
+                public void handle(ActionEvent e) {
+                    check1 = true;
+                    meaningButtonList.get(i).setOnAction(new EventHandler<ActionEvent>(){
+                        @Override
+                        public void handle(ActionEvent e) {
+                            check2 = true;
+                            meaningButtonList.get(i).setVisible(false);
+                            wordButtonList.get(i).setVisible(false);
+                        }
+                    });
                 }
             });
         }
 
-        for (int i = 0; i < meaningButtonList.size(); i++) {
-            final int idx = i;
-            Button mb = meaningButtonList.get(i);
-            mb.setOnAction(e -> {
-                selectedMeaningIndex = idx;
-                selectedMeaning = mb;
-                mb.getStyleClass().add("selected");
-                if (selectedWordIndex >= 0 && selectedWord != null) {
-                    boolean correct = check(selectedWord.getText(), selectedMeaning.getText());
-                    if (correct) {
-                        selectedWord.setVisible(false);
-                        selectedMeaning.setVisible(false);
-                    } else {
-                        selectedWord.getStyleClass().remove("selected");
-                        selectedMeaning.getStyleClass().remove("selected");
-                    }
-                    selectedWord = null;
-                    selectedMeaning = null;
-                    selectedWordIndex = -1;
-                    selectedMeaningIndex = -1;
-                }
-            });
-        }
         
-        // wordButton.setOnAction(new EventHandler<ActionEvent>(){
-        //     @Override
-        //     public void handle(ActionEvent e) {
-        //         check1 = true;
-        //         wordButtonList.
-        //     }
-        // });
-
-        // EventHandler<ActionEvent> choiceHandler = new EventHandler<ActionEvent>() {
-        //     @Override
-        //     public void handle(ActionEvent e) {
-        //         if (!awaitingAnswer) return;
-        //         Button b = (Button) e.getSource();
-        //         String chosen = b.getText();
-        //         evaluateAnswer(chosen);
-        //     }
-        // };
-        // for (int i = 0; i < choiceBtns.length; i++) {
-        //     choiceBtns[i].setOnAction(choiceHandler);
-        // }
-
         
 
     /** Needs to acount for: 
@@ -160,7 +106,7 @@ public class Matching extends VBox {
         }
         else{
             // display incorrect text onto screen
-            // do NOT remove button1 and button2  
+            // do NOT remove button1 and button2
         }
     }
 }
