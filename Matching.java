@@ -38,13 +38,14 @@ public class Matching extends VBox {
     private Button selectedMeaning;
     private int selectedWordIndex = -1;
     private int selectedMeaningIndex = -1;
-    // test label 
-    private Label test = new Label("test");
+    // gui components
+    private Label matchingLabel = new Label("Matching");
 
     public Matching(ArrayList<String> w, ArrayList<String> m) {
         this.words = w;
         this.meanings = m;
-        
+        setSpacing(10);
+        setPadding(new Insets(16));
         if (words.size() != meanings.size())
             bvox.getChildren().add(fail);
         else {
@@ -53,26 +54,12 @@ public class Matching extends VBox {
                 meaningButton = new Button(meanings.get(i));
                 wordButtonList.add(wordButton);
                 meaningButtonList.add(meaningButton);
-                //add css for buttons format
-                wordButton.setOnAction(new EventHandler<ActionEvent>(){
-                    @Override
-                    public void handle(ActionEvent e) {
-                        test.setText("word button clicked: " + wordButton.getText());
-                    }
-                });
-                meaningButton.setOnAction(new EventHandler<ActionEvent>(){
-                    @Override
-                    public void handle(ActionEvent e) {
-                        test.setText("meaning button clicked: " + meaningButton.getText());
-                    }
-                });
                 HBox setWords = new HBox(4);
                 setWords.getChildren().addAll(wordButton, meaningButton);
                 bvox.getChildren().add(setWords);
             }
         }
-        bvox.getChildren().add(test);
-        getChildren().add(bvox);
+        getChildren().addAll(matchingLabel, bvox);
 
         for (int i = 0; i < wordButtonList.size(); i++) {
             final int idx = i;

@@ -64,7 +64,9 @@ public class Accuracy extends VBox {
         answer.getStyleClass().add("answer");
         answer.setDisable(!started);
         answer.setOnAction(ev -> {
-            if (!submit.isDisabled()) submit.fire();
+            if (!submit.isDisabled()) {
+                submit.fire();
+            }
         });
         next.setVisible(started);
         showTimer.setText(String.format("%.2f", time));
@@ -168,7 +170,9 @@ public class Accuracy extends VBox {
             attempts++;
         }
         if (index < 0 || index >= words.size()) {
-            if (words == null || words.size() == 0) return;
+            if (words == null || words.size() == 0) {
+                return;
+            }
             index = rng.nextInt(words.size());
         }
         lastIndex = index;

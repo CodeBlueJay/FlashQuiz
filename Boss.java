@@ -11,7 +11,7 @@ public class Boss extends VBox {
     private boolean mcq;
 
     public Boss(ArrayList<String> w, ArrayList<String> m, boolean isMcq) {
-        super(10);
+        setSpacing(10);
         setPadding(new Insets(16));
         health = 5;
         bossHealth = 5;
@@ -21,6 +21,8 @@ public class Boss extends VBox {
 
         Label title = new Label("Boss Battle");
         Label info = new Label("Cards: " + (words != null ? words.size() : 0));
-        getChildren().addAll(title, info);
+        Label playerHp = new Label("Player HP: " + health);
+        Label bossHp = new Label("Boss HP: " + bossHealth);
+        getChildren().addAll(title, info, playerHp, bossHp);
     }
 }
