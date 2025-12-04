@@ -94,7 +94,6 @@ public class Matching extends VBox {
                     selectedMeaning = null;
                     selectedWordIndex = -1;
                     selectedMeaningIndex = -1;
-        
                 }
             });
         }

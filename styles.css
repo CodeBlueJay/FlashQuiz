@@ -170,6 +170,17 @@
   -fx-border-color: transparent;
 }
 
+.selected {
+  -fx-background-color: #ffd24d;
+  -fx-border-color: #cc9a00;
+  -fx-border-width: 2px;
+  -fx-text-fill: #2b2b2b;
+}
+
+.selected:hover {
+  -fx-background-color: #ffdf80;
+}
+
 .progress-bar {
   -fx-pref-width: 400;
   -fx-pref-height: 30;
