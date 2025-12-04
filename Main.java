@@ -243,16 +243,12 @@ public class Main extends Application {
             box.getChildren().addAll(title, new Label("Pick a set on Home first."));
             return box;
         }
-        int count = 0;
-        try {
-            ArrayList<ArrayList<String>> s = currentSet.getFlashcardSet();
-            if (s != null && s.size() >= 2 && s.get(0) != null) {
-                count = s.get(0).size();
-            }
-        } catch (Exception ignored) {}
-        boolean isMCQ =  
-        Boss bossview = new Boss(cs.get(0), cs.get(1), )
-        return ;
+        ArrayList<ArrayList<String>> cs = currentSet.getFlashcardSet();
+        ArrayList<String> terms = cs.get(0);
+        ArrayList<String> definitions = cs.get(1);
+        boolean isMCQ = false; // placeholder mode selection
+        Boss bossview = new Boss(terms, definitions, isMCQ);
+        return bossview;
     }
 
     private Node buildAccuracyScreen() {

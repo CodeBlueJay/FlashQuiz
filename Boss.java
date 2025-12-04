@@ -1,38 +1,26 @@
-import javafx.application.Application;
-import javafx.beans.value.ObservableValue;
-import javafx.geometry.Pos;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.Slider;
-import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
+import javafx.geometry.Insets;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import java.util.ArrayList;
 
-public class Boss {
+public class Boss extends VBox {
     private int health;
     private int bossHealth;
-    private String[] words;
-    private String[] meanings;
+    private ArrayList<String> words;
+    private ArrayList<String> meanings;
     private boolean mcq;
-    private EXPBarUI playerHealth;
-    private EXPBarUI bossHealth;
-    private VBox vbox;
-    
-    public Boss(String[] w, String[] m, boolean isMcq) {
+
+    public Boss(ArrayList<String> w, ArrayList<String> m, boolean isMcq) {
+        super(10);
+        setPadding(new Insets(16));
         health = 5;
         bossHealth = 5;
         words = w;
         meanings = m;
         mcq = isMcq;
 
-        vbox.getChildren().addAll(playerHealth, bossHealth);
-    
+        Label title = new Label("Boss Battle");
+        Label info = new Label("Cards: " + (words != null ? words.size() : 0));
+        getChildren().addAll(title, info);
     }
-
-    
-
-
 }
