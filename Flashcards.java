@@ -108,4 +108,28 @@ public class Flashcards {
     public ArrayList<Double> getWeights() {
         return weights;
     }
+
+    public void randomizeOrder(){
+        ArrayList<Double> tempWeights = new ArrayList<Double>();
+        ArrayList<String> tempTerms = new ArrayList<String>();
+        ArrayList<String> tempDefinitions = new ArrayList<String>();
+        int rand;
+        ArrayList<Integer> indexes = new ArrayList<Integer>();
+        for (int i = 0; i < flashcardSet.get(0).size(); i++){
+            indexes.add(i);
+        }
+        while (indexes.size() > 0){
+            rand = (int)(Math.random() * (flashcardSet.get(0).size()));
+            if (indexes.remove(rand)){
+                tempWeights.add(weights.get(rand));
+                tempTerms.add(flashcardSet.get(0).get(rand));
+                tempDefinitions.add(flashcardSet.get(1).get(rand));
+            }
+        }
+        flashcardSet.clear();
+        flashcardSet.add(tempTerms);
+        flashcardSet.add(tempDefinitions);
+        weights.clear();
+        weights = tempWeights;
+    }
 }
