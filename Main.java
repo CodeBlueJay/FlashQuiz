@@ -250,8 +250,12 @@ public class Main extends Application {
                 count = s.get(0).size();
             }
         } catch (Exception ignored) {}
-        box.getChildren().addAll(title, new Label("Ready with " + count + " cards (boss mechanics TBD)"));
-        return box;
+        ArrayList<ArrayList<String>> cs = currentSet.getFlashcardSet();
+        ArrayList<String> terms = cs.get(0);
+        ArrayList<String> definitions = cs.get(1);
+        boolean isMCQ = false; // placeholder mode selection
+        Boss bossview = new Boss(terms, definitions, isMCQ);
+        return bossview;
     }
 
     private Node buildAccuracyScreen() {
