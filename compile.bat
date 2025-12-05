@@ -2,15 +2,20 @@
 rem compile.bat - compile sources using a specific JDK and JavaFX SDK and create app.jar
 rem Adjust JDK_PATH below if your JDK is installed elsewhere.
 
-set JDK_PATH="C:\Program Files\Java\jdk-17"
-set JAVAC=%JDK_PATH%\bin\javac.exe"
-set JAR=%JDK_PATH%\bin\jar.exe"
+rem Set your JDK installation path here (no surrounding quotes). Edit if different.
+set "JDK_PATH=C:\Program Files\Java\jdk-17"
+
+rem Normalize: remove any accidental surrounding quotes from JDK_PATH
+set JDK_PATH=%JDK_PATH:"=%
+
+set "JAVAC=%JDK_PATH%\bin\javac.exe"
+set "JAR=%JDK_PATH%\bin\jar.exe"
 
 rem JavaFX relative path inside repo (adjust if needed)
 set "JAVAFX_REL=javafx-backup\javafx-sdk-17.0.17\lib"
 
-echo Using javac: %JAVAC%
-echo Using jar: %JAR%
+echo Using javac: "%JAVAC%"
+echo Using jar: "%JAR%"
 echo JavaFX lib: %JAVAFX_REL%
 
 if not exist "%JAVAC%" (
