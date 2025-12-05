@@ -118,18 +118,16 @@ public class Flashcards {
         for (int i = 0; i < flashcardSet.get(0).size(); i++){
             indexes.add(i);
         }
-        while (indexes.size() > 0){
-            rand = (int)(Math.random() * (flashcardSet.get(0).size()));
-            if (indexes.remove(rand)){
-                tempWeights.add(weights.get(rand));
-                tempTerms.add(flashcardSet.get(0).get(rand));
-                tempDefinitions.add(flashcardSet.get(1).get(rand));
-            }
+        while (!indexes.isEmpty()){
+            int pickIndex = (int)(Math.random() * indexes.size());
+            int originalIndex = indexes.remove(pickIndex);
+            tempWeights.add(weights.get(originalIndex));
+            tempTerms.add(flashcardSet.get(0).get(originalIndex));
+            tempDefinitions.add(flashcardSet.get(1).get(originalIndex));
         }
         flashcardSet.clear();
         flashcardSet.add(tempTerms);
         flashcardSet.add(tempDefinitions);
-        weights.clear();
         weights = tempWeights;
     }
 }
