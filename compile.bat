@@ -45,7 +45,8 @@ mkdir out
 
 rem create sources list
 if exist sources.txt del /f /q sources.txt
-for /r %%F in (*.java) do echo %%~fF>>sources.txt
+rem Build sources list but exclude files under dist, out, package-resources, and .git folders
+for /f "delims=" %%F in ('dir /s /b *.java ^| findstr /i /v "\\dist\\" ^| findstr /i /v "\\out\\" ^| findstr /i /v "\\package-resources\\" ^| findstr /i /v "\\.git\\"') do echo %%~fF>>sources.txt
 
 if not exist sources.txt (
   echo No Java source files found.
@@ -74,6 +75,16 @@ if errorlevel 1 (
   echo jar creation failed.
   pause
   exit /b 1
+)
+
+rem 5b) Ensure resources are packaged inside the jar by copying into out before jar creation
+rem (If earlier jar creation already succeeded, we still want resources inside app.jar on next run.)
+if exist "styles.css" copy /y "styles.css" "out\styles.css" >nul 2>&1
+if exist "fonts" (
+  xcopy "fonts" "out\fonts" /E /I /Y >nul 2>&1
+)
+if exist "sounds" (
+  xcopy "sounds" "out\sounds" /E /I /Y >nul 2>&1
 )
 
 echo Created app.jar successfully.

@@ -111,19 +111,20 @@ public class Flashcards {
     }
 
     public void randomizeOrder(){
-        int n = flashcardSet.get(0).size();
-        ArrayList<Integer> idx = new ArrayList<Integer>();
-        for (int i = 0; i < n; i++) idx.add(i);
-        Collections.shuffle(idx);
-
-        ArrayList<String> tempTerms = new ArrayList<String>(n);
-        ArrayList<String> tempDefinitions = new ArrayList<String>(n);
-        ArrayList<Double> tempWeights = new ArrayList<Double>(n);
-
-        for (int i : idx){
-            tempTerms.add(flashcardSet.get(0).get(i));
-            tempDefinitions.add(flashcardSet.get(1).get(i));
-            tempWeights.add(weights.get(i));
+        ArrayList<Double> tempWeights = new ArrayList<Double>();
+        ArrayList<String> tempTerms = new ArrayList<String>();
+        ArrayList<String> tempDefinitions = new ArrayList<String>();
+        int rand;
+        ArrayList<Integer> indexes = new ArrayList<Integer>();
+        for (int i = 0; i < flashcardSet.get(0).size(); i++){
+            indexes.add(i);
+        }
+        while (!indexes.isEmpty()){
+            int pickIndex = (int)(Math.random() * indexes.size());
+            int originalIndex = indexes.remove(pickIndex);
+            tempWeights.add(weights.get(originalIndex));
+            tempTerms.add(flashcardSet.get(0).get(originalIndex));
+            tempDefinitions.add(flashcardSet.get(1).get(originalIndex));
         }
 
         flashcardSet.clear();
