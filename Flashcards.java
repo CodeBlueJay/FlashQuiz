@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Flashcards {
     public static ArrayList<Flashcards> IDs = new ArrayList<Flashcards>();
@@ -110,26 +111,24 @@ public class Flashcards {
     }
 
     public void randomizeOrder(){
-        ArrayList<Double> tempWeights = new ArrayList<Double>();
-        ArrayList<String> tempTerms = new ArrayList<String>();
-        ArrayList<String> tempDefinitions = new ArrayList<String>();
-        int rand;
-        ArrayList<Integer> indexes = new ArrayList<Integer>();
-        for (int i = 0; i < flashcardSet.get(0).size(); i++){
-            indexes.add(i);
+        int n = flashcardSet.get(0).size();
+        ArrayList<Integer> idx = new ArrayList<Integer>();
+        for (int i = 0; i < n; i++) idx.add(i);
+        Collections.shuffle(idx);
+
+        ArrayList<String> tempTerms = new ArrayList<String>(n);
+        ArrayList<String> tempDefinitions = new ArrayList<String>(n);
+        ArrayList<Double> tempWeights = new ArrayList<Double>(n);
+
+        for (int i : idx){
+            tempTerms.add(flashcardSet.get(0).get(i));
+            tempDefinitions.add(flashcardSet.get(1).get(i));
+            tempWeights.add(weights.get(i));
         }
-        while (indexes.size() > 0){
-            rand = (int)(Math.random() * (flashcardSet.get(0).size()));
-            if (indexes.remove(rand)){
-                tempWeights.add(weights.get(rand));
-                tempTerms.add(flashcardSet.get(0).get(rand));
-                tempDefinitions.add(flashcardSet.get(1).get(rand));
-            }
-        }
+
         flashcardSet.clear();
         flashcardSet.add(tempTerms);
         flashcardSet.add(tempDefinitions);
-        weights.clear();
         weights = tempWeights;
     }
 }

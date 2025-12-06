@@ -58,22 +58,22 @@ public class Matching extends VBox {
         boolean check1 = false;
         boolean check2 = false;
 
-        for (int i = 0; i < choiceBtns.length; i++) {
-            wordButtonList.get(i).setOnAction(new EventHandler<ActionEvent>(){
-                @Override
-                public void handle(ActionEvent e) {
-                    check1 = true;
-                    meaningButtonList.get(i).setOnAction(new EventHandler<ActionEvent>(){
-                        @Override
-                        public void handle(ActionEvent e) {
-                            check2 = true;
-                            meaningButtonList.get(i).setVisible(false);
-                            wordButtonList.get(i).setVisible(false);
-                        }
-                    });
-                }
-            });
-        }
+        // for (int i = 0; i < choiceBtns.length; i++) {
+        //     wordButtonList.get(i).setOnAction(new EventHandler<ActionEvent>(){
+        //         @Override
+        //         public void handle(ActionEvent e) {
+        //             check1 = true;
+        //             meaningButtonList.get(i).setOnAction(new EventHandler<ActionEvent>(){
+        //                 @Override
+        //                 public void handle(ActionEvent e) {
+        //                     check2 = true;
+        //                     meaningButtonList.get(i).setVisible(false);
+        //                     wordButtonList.get(i).setVisible(false);
+        //                 }
+        //             });
+        //         }
+        //     });
+        // }
 
         
         

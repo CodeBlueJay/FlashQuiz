@@ -1,6 +1,7 @@
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.text.Font;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -118,9 +119,30 @@ public class Main extends Application {
             }
         });
         Scene scene = new Scene(root, 900, 650);
-        File css = new File("styles.css");
-        if (css.exists()) {
-            scene.getStylesheets().add(css.toURI().toString());
+        try {
+            java.net.URL cssUrl = getClass().getResource("/styles.css");
+            if (cssUrl != null) {
+                scene.getStylesheets().add(cssUrl.toExternalForm());
+            } else {
+                java.io.File css = new java.io.File("styles.css");
+                java.io.File cssApp = new java.io.File("app/styles.css");
+                if (css.exists()) {
+                    scene.getStylesheets().add(css.toURI().toString());
+                } else if (cssApp.exists()) {
+                    scene.getStylesheets().add(cssApp.toURI().toString());
+                }
+            }
+
+            java.net.URL fontUrl = getClass().getResource("/fonts/microwave.ttf");
+            if (fontUrl != null) {
+                Font.loadFont(fontUrl.toExternalForm(), 10);
+            } else {
+                java.io.File fnt = new java.io.File("fonts/microwave.ttf");
+                java.io.File fntApp = new java.io.File("app/fonts/microwave.ttf");
+                if (fnt.exists()) Font.loadFont(fnt.toURI().toString(), 10);
+                else if (fntApp.exists()) Font.loadFont(fntApp.toURI().toString(), 10);
+            }
+        } catch (Exception ignored) {
         }
         stage.setScene(scene);
         stage.show();
