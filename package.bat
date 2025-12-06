@@ -106,11 +106,24 @@ if exist "styles.css" copy /y "styles.css" "%RES_DIR%\styles.css" >nul 2>&1
 if exist "sounds" xcopy "sounds" "%RES_DIR%\sounds" /E /I /Y >nul 2>&1
 if exist "fonts" xcopy "fonts" "%RES_DIR%\fonts" /E /I /Y >nul 2>&1
 
-cmd /c ""%JPACKAGE%" --type %JPACKAGE_TYPE% --name Flashcards --app-version 1.0.0 --dest "%DEST%" --input . --resource-dir "%CD%\%RES_DIR%" --main-jar app.jar --main-class Main --module-path "%CD%\%JAVAFX_REL%" --add-modules javafx.controls,javafx.fxml,javafx.media --java-options ""--enable-native-access=javafx.graphics"" --java-options ""--enable-native-access=javafx.media"" --java-options ""-Dprism.order=sw"" --java-options ""-Dprism.forceGPU=false"" --java-options ""-Dprism.verbose=true"" --java-options ""-Djava.library.path=%CD%\%JAVAFX_BIN%"" --win-console"
-rem Clean up temporary resource dir
+
+rem Create a minimal input folder for jpackage containing only the application jar
+set "INPUT_DIR=%TEMP%\fc-input"
+if exist "%INPUT_DIR%" rmdir /s /q "%INPUT_DIR%"
+mkdir "%INPUT_DIR%"
+copy /y "app.jar" "%INPUT_DIR%\" >nul 2>&1
+
+rem Run jpackage directly and capture verbose output to a log for troubleshooting
+echo Running jpackage (this may take a while) - logging to %TEMP%\jpackage.log
+"%JPACKAGE%" --type %JPACKAGE_TYPE% --name Flashcards --app-version 1.0.0 --dest "%DEST%" --input "%INPUT_DIR%" --resource-dir "%CD%\%RES_DIR%" --main-jar app.jar --main-class Main --module-path "%CD%\%JAVAFX_REL%" --add-modules javafx.controls,javafx.fxml,javafx.media --java-options "--enable-native-access=javafx.graphics" --java-options "--enable-native-access=javafx.media" --java-options "-Dprism.order=sw" --java-options "-Dprism.forceGPU=false" --java-options "-Dprism.verbose=true" --java-options "-Djava.library.path=%CD%\%JAVAFX_BIN%" --win-console --verbose > "%TEMP%\jpackage.log" 2>&1
+
+rem Clean up temporary input and resource dirs
+if exist "%INPUT_DIR%" rmdir /s /q "%INPUT_DIR%"
 if exist "%RES_DIR%" rmdir /s /q "%RES_DIR%"
 
 if errorlevel 1 (
+	echo jpackage failed -- see %TEMP%\jpackage.log for details
+	type "%TEMP%\jpackage.log"
 	pause
 	exit /b 1
 )
@@ -120,18 +133,133 @@ if "%JPACKAGE_TYPE%"=="app-image" (
 ) else (
 	echo Built installer in %DEST%. Run the installer to install Flashcards.
 )
-rem Ensure resources are present in the produced app image root so runtime can load them
+rem Determine actual image directory created by jpackage (robust lookup)
+set "IMAGE_DIR="
 if exist "%DEST%\Flashcards" (
-	if exist "styles.css" copy /y "styles.css" "%DEST%\Flashcards\styles.css" >nul 2>&1
-	if exist "sounds" xcopy "sounds" "%DEST%\Flashcards\sounds" /E /I /Y >nul 2>&1
-	if exist "fonts" xcopy "fonts" "%DEST%\Flashcards\fonts" /E /I /Y >nul 2>&1
-	echo Copied styles/sounds/fonts into %DEST%\Flashcards
+	set "IMAGE_DIR=%DEST%\Flashcards"
+) else (
+	for /f "delims=" %%I in ('dir "%DEST%\Flashcards*" /b /ad 2^>nul') do (
+		set "IMAGE_DIR=%DEST%\%%I"
+		goto :_found_image_dir
+	)
 )
-rem Also copy into the app subfolder (some layouts place resources there)
-if exist "%DEST%\Flashcards\app" (
-	if exist "styles.css" copy /y "styles.css" "%DEST%\Flashcards\app\styles.css" >nul 2>&1
-	if exist "sounds" xcopy "sounds" "%DEST%\Flashcards\app\sounds" /E /I /Y >nul 2>&1
-	if exist "fonts" xcopy "fonts" "%DEST%\Flashcards\app\fonts" /E /I /Y >nul 2>&1
-	echo Also copied resources into %DEST%\Flashcards\app
+:_found_image_dir
+
+if not defined IMAGE_DIR (
+	echo WARNING: Could not find app image directory under %DEST%. Skipping resource copy.
+) else (
+	echo Found image directory: %IMAGE_DIR%
+	rem Prefer robocopy if available (more reliable). Use quiet output switches.
+	where robocopy >nul 2>&1
+	if errorlevel 1 (
+		set "USE_ROBOCOPY=0"
+	) else (
+		set "USE_ROBOCOPY=1"
+	)
+
+	rem Copy styles.css
+	if exist "styles.css" (
+		if "%USE_ROBOCOPY%"=="1" (
+			robocopy . "%IMAGE_DIR%" "styles.css" /NFL /NDL /NJH /NJS >nul
+		) else (
+			copy /y "styles.css" "%IMAGE_DIR%\styles.css" >nul 2>&1
+		)
+	)
+
+	rem Copy sounds dir
+	if exist "sounds" (
+		if "%USE_ROBOCOPY%"=="1" (
+			robocopy "sounds" "%IMAGE_DIR%\sounds" * /E /NFL /NDL /NJH /NJS >nul
+		) else (
+			xcopy "sounds" "%IMAGE_DIR%\sounds" /E /I /Y >nul 2>&1
+		)
+	)
+
+	rem Copy fonts dir
+	if exist "fonts" (
+		if "%USE_ROBOCOPY%"=="1" (
+			robocopy "fonts" "%IMAGE_DIR%\fonts" * /E /NFL /NDL /NJH /NJS >nul
+		) else (
+			xcopy "fonts" "%IMAGE_DIR%\fonts" /E /I /Y >nul 2>&1
+		)
+	)
+
+	echo Copied styles/sounds/fonts into %IMAGE_DIR%
+
+	rem Also copy into the app subfolder if present
+	if exist "%IMAGE_DIR%\app" (
+		if exist "styles.css" (
+			if "%USE_ROBOCOPY%"=="1" (
+				robocopy . "%IMAGE_DIR%\app" "styles.css" /NFL /NDL /NJH /NJS >nul
+			) else (
+				copy /y "styles.css" "%IMAGE_DIR%\app\styles.css" >nul 2>&1
+			)
+		)
+		if exist "sounds" (
+			if "%USE_ROBOCOPY%"=="1" (
+				robocopy "sounds" "%IMAGE_DIR%\app\sounds" * /E /NFL /NDL /NJH /NJS >nul
+			) else (
+				xcopy "sounds" "%IMAGE_DIR%\app\sounds" /E /I /Y >nul 2>&1
+			)
+		)
+		if exist "fonts" (
+			if "%USE_ROBOCOPY%"=="1" (
+				robocopy "fonts" "%IMAGE_DIR%\app\fonts" * /E /NFL /NDL /NJH /NJS >nul
+			) else (
+				xcopy "fonts" "%IMAGE_DIR%\app\fonts" /E /I /Y >nul 2>&1
+			)
+		)
+		echo Also copied resources into %IMAGE_DIR%\app
+	)
+
+	rem Copy project-sources snapshot into image and app subfolder
+	echo Creating clean project-sources snapshot
+	rem Create a temporary snapshot folder in %TEMP% to avoid accidentally copying dist/out or other generated folders
+	set "SNAP=%TEMP%\fc-snapshot"
+	if exist "%SNAP%" rmdir /s /q "%SNAP%"
+	mkdir "%SNAP%"
+
+	rem Copy top-level source files and docs into snapshot
+	if exist "*.java" copy /y "*.java" "%SNAP%\" >nul 2>&1
+	if exist "*.md" copy /y "*.md" "%SNAP%\" >nul 2>&1
+
+	rem Copy src tree if present (use robocopy for reliability)
+	if exist "src" (
+		if "%USE_ROBOCOPY%"=="1" (
+			robocopy "src" "%SNAP%\src" * /E /NFL /NDL /NJH /NJS >nul
+		) else (
+			xcopy "src" "%SNAP%\src" /E /I /Y >nul 2>&1
+		)
+	)
+
+	rem Also include README and other helpful files
+	if exist "README.md" copy /y "README.md" "%SNAP%\" >nul 2>&1
+
+	rem Finally copy the snapshot into the image (and app subfolder)
+	if exist "%SNAP%" (
+		if "%USE_ROBOCOPY%"=="1" (
+			robocopy "%SNAP%" "%IMAGE_DIR%\project-sources" * /E /NFL /NDL /NJH /NJS >nul
+		) else (
+			xcopy "%SNAP%" "%IMAGE_DIR%\project-sources" /E /I /Y >nul 2>&1
+		)
+		echo Copied project-sources to %IMAGE_DIR%\project-sources
+		if exist "%IMAGE_DIR%\app" (
+			if "%USE_ROBOCOPY%"=="1" (
+				robocopy "%SNAP%" "%IMAGE_DIR%\app\project-sources" * /E /NFL /NDL /NJH /NJS >nul
+			) else (
+				xcopy "%SNAP%" "%IMAGE_DIR%\app\project-sources" /E /I /Y >nul 2>&1
+			)
+			echo Also copied project-sources into %IMAGE_DIR%\app\project-sources
+		)
+		rem Remove temporary snapshot
+		if exist "%SNAP%" rmdir /s /q "%SNAP%"
+	) else (
+		echo WARNING: snapshot folder not created, skipping project-sources copy
+	)
+	rem Previously the script attempted to copy project sources again from the working directory
+	rem which could inadvertently include the just-created image (dist) and cause recursive copies.
+	rem That behavior is dangerous; we intentionally avoid copying from the repository root here.
+	rem If additional files need to be added into '%IMAGE_DIR%\app\project-sources', create
+	rem a safe snapshot first (see above) or place files into 'project-sources' before packaging.
 )
 endlocal
