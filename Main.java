@@ -22,8 +22,8 @@ public class Main extends Application {
     private BorderPane root;
     private Flashcards currentSet;
     // Default flashcard set
-    ArrayList<String> default_terms = new ArrayList<>(Arrays.asList("Sus", "69", "Owen", "Jaden", "Jayden (a lazy person)"));
-    ArrayList<String> default_definitions = new ArrayList<>(Arrays.asList("Short for 'suspicious', originating from Among Us", "OG funny number that came before 67", "Does too little, gay", "Doing too much", "is a bum"));
+    ArrayList<String> default_terms = new ArrayList<>(Arrays.asList("Sus", "69", "Owen", "Jaden"));
+    ArrayList<String> default_definitions = new ArrayList<>(Arrays.asList("Short for 'suspicious', originating from Among Us", "OG funny number that came before 67", "Does too little, gay", "Doing too much"));
     Flashcards flashcards = new Flashcards(default_terms, default_definitions);
     private EXPBarUI expBar;
     @Override

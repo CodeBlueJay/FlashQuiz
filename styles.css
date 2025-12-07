@@ -210,3 +210,53 @@
 .score {
   -fx-font-size: 24px;
 }
+
+.match-button {
+  -fx-font-size: 14px;
+  -fx-padding: 8 12;
+  -fx-background-color: linear-gradient(to bottom, #ffffff, #f5f8ff);
+  -fx-background-insets: 0, 1;
+  -fx-background-radius: 8;
+  -fx-border-color: #d7e0fb;
+  -fx-border-radius: 8;
+  -fx-border-width: 1;
+  -fx-text-fill: #16247d;
+  -fx-alignment: center-left;
+  -fx-min-width: 160;
+}
+
+.match-button:hover {
+  -fx-background-color: linear-gradient(to bottom, #f2f6ff, #e9f3ff);
+  -fx-cursor: hand;
+}
+
+.match-button.selected {
+  -fx-background-color: linear-gradient(to bottom, #2e7dff, #2263d6);
+  -fx-text-fill: white;
+  -fx-effect: dropshadow(gaussian, rgba(46,125,255,0.25), 8, 0.2, 0, 2);
+}
+
+.match-button.matched {
+  -fx-opacity: 0;
+  -fx-max-height: 0;
+  -fx-min-height: 0;
+  -fx-padding: 0;
+  -fx-border-width: 0;
+}
+
+.match-word {
+  -fx-font-weight: bold;
+}
+
+.match-meaning {
+  -fx-font-style: italic;
+  -fx-text-fill: #4b5563;
+}
+
+.hidden-node {
+  -fx-opacity: 0;
+  -fx-max-height: 0;
+  -fx-min-height: 0;
+  -fx-padding: 0;
+}
+

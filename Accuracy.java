@@ -57,7 +57,7 @@ public class Accuracy extends VBox {
         started = false;
         expBar = exp;
         timeline = new Timeline();
-        addTime = 10;
+        addTime = 5;
         XPadd = 5;
         setSpacing(10);
         setPadding(new Insets(16));
@@ -82,6 +82,7 @@ public class Accuracy extends VBox {
         submit.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
+                timeline.stop();
                 ans = "";
                 if (!(answer.getText() == null)) {
                     ans = answer.getText();
@@ -90,8 +91,8 @@ public class Accuracy extends VBox {
                 }
                 answer.setText(ans);
                 if (ans.toLowerCase().equals(correctAnswer.toLowerCase())) {
-                    if (addTime > 3) {
-                        addTime -= 0.5;
+                    if (addTime > 0.25) {
+                        addTime -= 0.25;
                     }
                     questionsCorrect++;
                     time += addTime;
@@ -115,6 +116,7 @@ public class Accuracy extends VBox {
         next.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
+                timer();
                 next.setVisible(false);
                 answer.clear();
                 feedback.setText("");
@@ -123,41 +125,41 @@ public class Accuracy extends VBox {
                 mainLoop();
             }
         });
-        timer();
-    }
-    public void timer() {
         start.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                mainLoop();
-                started = true;
-                answer.setDisable(false);
-                submit.setDisable(false);
-                start.setDisable(true);
-                answer.requestFocus();
-                if (timeline != null) {
-                    timeline.stop();
-                }
                 time = startTime;
-                showTimer.setText(String.format("%.2f", time));
-                timeline = new Timeline(new KeyFrame(Duration.millis(10), ev -> {
-                    time -= 0.01;
-                    if (time <= 0) {
-                        showTimer.setText("0.00");
-                        timeline.stop();
-                        feedback.setText("Time's Up!");
-                        answer.setDisable(true);
-                        submit.setDisable(true);
-                        start.setDisable(false);
-                        started = false;
-                    } else {
-                        showTimer.setText(String.format("%.2f", time));
-                    }
-                }));
-                timeline.setCycleCount(Timeline.INDEFINITE);
-                timeline.play();
+                timer();
             }
         });
+    }
+    public void timer() {
+        mainLoop();
+        started = true;
+        answer.setDisable(false);
+        submit.setDisable(false);
+        start.setDisable(true);
+        answer.requestFocus();
+        if (timeline != null) {
+            timeline.stop();
+        }
+        showTimer.setText(String.format("%.2f", time));
+        timeline = new Timeline(new KeyFrame(Duration.millis(10), ev -> {
+            time -= 0.01;
+            if (time <= 0) {
+                showTimer.setText("0.00");
+                timeline.stop();
+                feedback.setText("Time's Up!");
+                answer.setDisable(true);
+                submit.setDisable(true);
+                start.setDisable(false);
+                started = false;
+            } else {
+                showTimer.setText(String.format("%.2f", time));
+            }
+        }));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
     }
 
     private void mainLoop() {

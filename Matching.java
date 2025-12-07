@@ -38,6 +38,8 @@ public class Matching extends VBox {
     private Button selectedMeaning;
     private int selectedWordIndex = -1;
     private int selectedMeaningIndex = -1;
+    private boolean check1 = false;
+    private boolean check2 = false;
     // gui components
     private Label matchingLabel = new Label("Matching");
 
@@ -52,6 +54,8 @@ public class Matching extends VBox {
             for (int i = 0; i < words.size(); i++) {
                 wordButton = new Button(words.get(i));
                 meaningButton = new Button(meanings.get(i));
+                wordButton.getStyleClass().addAll("match-button", "match-word");
+                meaningButton.getStyleClass().addAll("match-button", "match-meaning");
                 wordButtonList.add(wordButton);
                 meaningButtonList.add(meaningButton);
                 HBox setWords = new HBox(4);
@@ -60,37 +64,23 @@ public class Matching extends VBox {
             }
         }
         getChildren().addAll(matchingLabel, bvox);
-
-        boolean check1 = false;
-        boolean check2 = false;
-
-        // for (int i = 0; i < choiceBtns.length; i++) {
-        //     wordButtonList.get(i).setOnAction(new EventHandler<ActionEvent>(){
-        //         @Override
-        //         public void handle(ActionEvent e) {
-        //             check1 = true;
-        //             meaningButtonList.get(i).setOnAction(new EventHandler<ActionEvent>(){
-        //                 @Override
-        //                 public void handle(ActionEvent e) {
-        //                     check2 = true;
-        //                     meaningButtonList.get(i).setVisible(false);
-        //                     wordButtonList.get(i).setVisible(false);
-        //                 }
-        //             });
-        //         }
-        //     });
-        // }
-
-        for (int i = 0; i < meaningButtonList.size(); i++) {
+        
+        for (int i = 0; i < wordButtonList.size(); i++) {
             final int idx = i;
-            Button mb = meaningButtonList.get(i);
-            mb.setOnAction(e -> {
-                selectedMeaningIndex = idx;
-                selectedMeaning = mb;
-                mb.getStyleClass().add("selected");
-                if (selectedWordIndex >= 0 && selectedWord != null) {
+            Button wb = wordButtonList.get(i);
+            wb.setOnAction(e -> {
+                if (selectedWord != null && selectedWord != wb) {
+                    selectedWord.getStyleClass().remove("selected");
+                }
+                selectedWordIndex = idx;
+                selectedWord = wb;
+                wb.getStyleClass().add("selected");
+
+                if (selectedMeaningIndex >= 0 && selectedMeaning != null) {
                     boolean correct = check(selectedWord.getText(), selectedMeaning.getText());
                     if (correct) {
+                        selectedWord.getStyleClass().add("matched");
+                        selectedMeaning.getStyleClass().add("matched");
                         selectedWord.setVisible(false);
                         selectedMeaning.setVisible(false);
                     } else {
@@ -104,28 +94,35 @@ public class Matching extends VBox {
                 }
             });
         }
-        
-        // wordButton.setOnAction(new EventHandler<ActionEvent>(){
-        //     @Override
-        //     public void handle(ActionEvent e) {
-        //         check1 = true;
-        //         wordButtonList.
-        //     }
-        // });
 
-        // EventHandler<ActionEvent> choiceHandler = new EventHandler<ActionEvent>() {
-        //     @Override
-        //     public void handle(ActionEvent e) {
-        //         if (!awaitingAnswer) return;
-        //         Button b = (Button) e.getSource();
-        //         String chosen = b.getText();
-        //         evaluateAnswer(chosen);
-        //     }
-        // };
-        // for (int i = 0; i < choiceBtns.length; i++) {
-        //     choiceBtns[i].setOnAction(choiceHandler);
-        // }
-
+        for (int i = 0; i < meaningButtonList.size(); i++) {
+            final int idx = i;
+            Button mb = meaningButtonList.get(i);
+            mb.setOnAction(e -> {
+                if (selectedMeaning != null && selectedMeaning != mb) {
+                    selectedMeaning.getStyleClass().remove("selected");
+                }
+                selectedMeaningIndex = idx;
+                selectedMeaning = mb;
+                mb.getStyleClass().add("selected");
+                if (selectedWordIndex >= 0 && selectedWord != null) {
+                    boolean correct = check(selectedWord.getText(), selectedMeaning.getText());
+                    if (correct) {
+                        selectedWord.getStyleClass().add("matched");
+                        selectedMeaning.getStyleClass().add("matched");
+                        selectedWord.setVisible(false);
+                        selectedMeaning.setVisible(false);
+                    } else {
+                        selectedWord.getStyleClass().remove("selected");
+                        selectedMeaning.getStyleClass().remove("selected");
+                    }
+                    selectedWord = null;
+                    selectedMeaning = null;
+                    selectedWordIndex = -1;
+                    selectedMeaningIndex = -1;
+                }
+            });
+        }
         
 
     /** Needs to acount for: 
