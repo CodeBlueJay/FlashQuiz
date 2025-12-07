@@ -1,0 +1,92 @@
+import javafx.geometry.Insets;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import java.util.ArrayList;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
+import javafx.scene.text.Font;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import javafx.beans.property.ObjectProperty;
+
+public class Accuracy extends VBox {
+    private ArrayList<String> words;
+    private ArrayList<String> meanings;
+    private ArrayList<Double> weights;
+    private int questionsCorrect;
+    private double time;
+    private EXPBarUI expBar;
+    private Timeline timeline;
+    // more gui components
+    private Label accuracylabel = new Label("Accuracy");
+    private VBox container = new VBox(8);
+    private TextField answer = new TextField();
+    private Button submit = new Button("Submit");
+    private Button start = new Button("Start");
+    private Label showTimer = new Label();
+    private HBox timerButtons = new HBox(4);
+    Font microwave;
+    {
+        microwave = Font.loadFont("file:fonts/microwave.ttf", 36);
+    }
+    
+    public Accuracy(ArrayList<String> w, ArrayList<String> m, ArrayList<Double> we, EXPBarUI exp) {
+        words = w;
+        meanings = m;
+        weights = we;
+        questionsCorrect = 0;
+        time = 7.0;
+        expBar = exp;
+        timeline = new Timeline();
+        setSpacing(10);
+        setPadding(new Insets(16));
+        answer.getStyleClass().add("answer");
+        showTimer.setText(String.format("%.2f", time));
+        showTimer.getStyleClass().add("timer");
+        if (microwave != null) {
+            showTimer.setFont(microwave);
+        }
+        container.getChildren().addAll(answer, submit);
+        timerButtons.getChildren().addAll(showTimer, start);
+        getChildren().addAll(accuracylabel, timerButtons, container);
+
+        submit.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                String ans = "";
+                if (!(answer.getText() == null)) {
+                    ans = answer.getText();
+                } else {
+                    ans = "";
+                }
+                answer.setText(ans);
+            }
+            
+        });
+        start.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                ObjectProperty<java.time.Duration> remainingTime = new ObjectProperty<java.time.Duration>(java.time.Duration.ofSeconds(5));
+                if (timeline != null)
+                    timeline.stop();
+                timeline = new Timeline();
+                timeline.gechhtKeyFrames().add(
+                    new KeyFrame(Duration.seconds(time), (ActionEvent event) -> 
+                    showTimer.setText()));
+                    }
+                    ));
+                timeline.play();
+            }
+        });
+    }   
+    }
+
+
+}

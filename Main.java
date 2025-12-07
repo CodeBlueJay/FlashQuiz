@@ -253,7 +253,7 @@ public class Main extends Application {
             }
         } catch (Exception ignored) {}
         ArrayList<ArrayList<String>> cs = currentSet.getFlashcardSet(); 
-        Matching matchview = new Matching(cs.get(0), cs.get(1));
+        Matching matchview = new Matching(cs.get(0), cs.get(1), expBar);
         return matchview;
     }
 

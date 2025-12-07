@@ -1,0 +1,2 @@
+javac --module-path ".\javafx-backup\javafx-sdk-17.0.17\lib" --add-modules javafx.controls,javafx.fxml -d out EXPBar.java
+java --module-path ".\javafx-backup\javafx-sdk-17.0.17\lib" --add-modules javafx.controls,javafx.fxml -cp out EXPBar

@@ -43,7 +43,7 @@ public class Matching extends VBox {
     // gui components
     private Label matchingLabel = new Label("Matching");
 
-    public Matching(ArrayList<String> w, ArrayList<String> m) {
+    public Matching(ArrayList<String> w, ArrayList<String> m, EXPBarUI xpBar) {
         this.words = w;
         this.meanings = m;
         setSpacing(10);
@@ -79,6 +79,7 @@ public class Matching extends VBox {
                 if (selectedMeaningIndex >= 0 && selectedMeaning != null) {
                     boolean correct = check(selectedWord.getText(), selectedMeaning.getText());
                     if (correct) {
+                        xpBar.addXP(10);
                         selectedWord.getStyleClass().add("matched");
                         selectedMeaning.getStyleClass().add("matched");
                         selectedWord.setVisible(false);
@@ -108,6 +109,7 @@ public class Matching extends VBox {
                 if (selectedWordIndex >= 0 && selectedWord != null) {
                     boolean correct = check(selectedWord.getText(), selectedMeaning.getText());
                     if (correct) {
+                        xpBar.addXP(10);
                         selectedWord.getStyleClass().add("matched");
                         selectedMeaning.getStyleClass().add("matched");
                         selectedWord.setVisible(false);
