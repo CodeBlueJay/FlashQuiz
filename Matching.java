@@ -47,10 +47,12 @@ public class Matching extends VBox {
     // gui components
     private Label matchingLabel = new Label("Matching");
     private Label feedback = new Label("");
+    private EXPBarUI xp;
 
     public Matching(ArrayList<String> w, ArrayList<String> m, EXPBarUI xpBar) {
         words = w;
         meanings = m;
+        xp = xpBar;
         randomized = new ArrayList<String>(w);
         setSpacing(10);
         setPadding(new Insets(16));
@@ -74,6 +76,34 @@ public class Matching extends VBox {
             }
         }
         getChildren().addAll(matchingLabel, bvox, feedback);
+
+        for (int i = 0; i < meaningButtonList.size(); i++) {
+            Button mb = meaningButtonList.get(i);
+            mb.setOnAction(e -> {
+                if (selectedMeaning != null) {
+                    selectedMeaning.getStyleClass().remove("selected");
+                }
+                selectedMeaning = mb;
+                mb.getStyleClass().add("selected");
+                if (selectedWord != null) {
+                    match(selectedWord, selectedMeaning);
+                }
+            });
+        }
+        for (int i = 0; i < randomizedButtonList.size(); i++) {  
+            Button wb = randomizedButtonList.get(i);
+            wb.setOnAction(e -> {
+                if (selectedWord != null) {
+                    selectedWord.getStyleClass().remove("selected");
+                }
+                selectedWord = wb;
+                wb.getStyleClass().add("selected");
+                if (selectedMeaning != null) {
+                    match(selectedWord, selectedMeaning);
+                }
+            });
+
+        }
     }
 
     /** Needs to acount for: 
@@ -98,14 +128,19 @@ public class Matching extends VBox {
         String definition = button2.getText();
         boolean correct = check(term, definition);
         if (correct){
+            xp.addXP(10);
             feedback.setText("Well Done!");
-
-            // remove button1 and button2
+            selectedWord.setVisible(false);
+            selectedMeaning.setVisible(false);
         }
         else{
-            // display incorrect text onto screen
+            feedback.setText("Incorrect!");
             // do NOT remove button1 and button2  
         }
+        selectedMeaning = null;
+        selectedWord = null;
+        button1.getStyleClass().remove("selected");
+        button2.getStyleClass().remove("selected");
     }
 }
 
