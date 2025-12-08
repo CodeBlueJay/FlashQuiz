@@ -115,8 +115,8 @@ copy /y "app.jar" "%INPUT_DIR%\" >nul 2>&1
 
 rem Run jpackage directly and capture verbose output to a log for troubleshooting
 echo Running jpackage (this may take a while) - logging to %TEMP%\jpackage.log
-"%JPACKAGE%" --type %JPACKAGE_TYPE% --name Flashcards --app-version 1.0.0 --dest "%DEST%" --input "%INPUT_DIR%" --resource-dir "%CD%\%RES_DIR%" --main-jar app.jar --main-class Main --module-path "%CD%\%JAVAFX_REL%" --add-modules javafx.controls,javafx.fxml,javafx.media --java-options "--enable-native-access=javafx.graphics" --java-options "--enable-native-access=javafx.media" --java-options "-Dprism.order=sw" --java-options "-Dprism.forceGPU=false" --java-options "-Dprism.verbose=true" --java-options "-Djava.library.path=%CD%\%JAVAFX_BIN%" --win-console --verbose > "%TEMP%\jpackage.log" 2>&1
-
+rem "%JPACKAGE%" --type %JPACKAGE_TYPE% --name Flashcards --app-version 1.0.0 --dest "%DEST%" --input "%INPUT_DIR%" --resource-dir "%CD%\%RES_DIR%" --main-jar app.jar --main-class Main --module-path "%CD%\%JAVAFX_REL%" --add-modules javafx.controls,javafx.fxml,javafx.media --java-options "--enable-native-access=javafx.graphics" --java-options "--enable-native-access=javafx.media" --java-options "-Dprism.order=sw" --java-options "-Dprism.forceGPU=false" --java-options "-Dprism.verbose=true" --java-options "-Djava.library.path=%CD%\%JAVAFX_BIN%" --win-console --verbose > "%TEMP%\jpackage.log" 2>&1
+"%JPACKAGE%" --type %JPACKAGE_TYPE% --name Flashcards --app-version 1.0.0 --dest "%DEST%" --input "%INPUT_DIR%" --resource-dir "%CD%\%RES_DIR%" --main-jar app.jar --main-class Main --module-path "%CD%\%JAVAFX_REL%" --add-modules javafx.controls,javafx.fxml,javafx.media --java-options "--enable-native-access=javafx.graphics" --java-options "--enable-native-access=javafx.media" --java-options "-Dprism.order=sw" --java-options "-Dprism.forceGPU=false" --java-options "-Dprism.verbose=true" --java-options "-Djava.library.path=%CD%\%JAVAFX_BIN%" --verbose > "%TEMP%\jpackage.log" 2>&1
 rem Clean up temporary input and resource dirs
 if exist "%INPUT_DIR%" rmdir /s /q "%INPUT_DIR%"
 if exist "%RES_DIR%" rmdir /s /q "%RES_DIR%"

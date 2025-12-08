@@ -64,17 +64,17 @@ public class Main extends Application {
         Button setsBtn = new Button("Sets");
         Button learnBtn = new Button("Learn");
         Button matchingBtn = new Button("Matching");
-        Button bossBtn = new Button("Boss Battle");
+        // Button bossBtn = new Button("Boss Battle");
         Button accuracyBtn = new Button("Accuracy");
 
         homeBtn.getStyleClass().addAll("nav-button", "primary");
         setsBtn.getStyleClass().addAll("nav-button", "danger");
         learnBtn.getStyleClass().addAll("nav-button", "accent");
         matchingBtn.getStyleClass().addAll("nav-button", "accent");
-        bossBtn.getStyleClass().addAll("nav-button", "accent");
+        // bossBtn.getStyleClass().addAll("nav-button", "accent");
         accuracyBtn.getStyleClass().addAll("nav-button", "accent");
 
-        menu.getChildren().addAll(homeBtn, setsBtn, learnBtn, matchingBtn, bossBtn, accuracyBtn);
+        menu.getChildren().addAll(homeBtn, setsBtn, learnBtn, matchingBtn, accuracyBtn);
         root = new BorderPane();
         
         expBar = EXPBarUI.getInstance();
@@ -100,12 +100,12 @@ public class Main extends Application {
                 root.setCenter(buildMatchingScreen());
             }
         });
-        bossBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                root.setCenter(buildBossScreen());
-            }
-        });
+        // bossBtn.setOnAction(new EventHandler<ActionEvent>() {
+        //     @Override
+        //     public void handle(ActionEvent e) {
+        //         root.setCenter(buildBossScreen());
+        //     }
+        // });
         accuracyBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -258,29 +258,29 @@ public class Main extends Application {
         return matchview;
     }
 
-    private Node buildBossScreen() {
-        VBox box = new VBox(10);
-        box.setPadding(new Insets(16));
-        Label title = new Label("Boss Battle");
-        if (currentSet == null || currentSet.getFlashcardSet() == null || currentSet.getFlashcardSet().size() < 2) {
-            box.getChildren().addAll(title, new Label("Pick a set on Home first."));
-            return box;
-        }
-        int count = 0;
-        try {
-            ArrayList<ArrayList<String>> s = currentSet.getFlashcardSet();
-            if (s != null && s.size() >= 2 && s.get(0) != null) {
-                count = s.get(0).size();
-            }
-        } catch (Exception ignored) {}
-        ArrayList<ArrayList<String>> cs = currentSet.getFlashcardSet();
-        ArrayList<String> terms = cs.get(0);
-        ArrayList<String> definitions = cs.get(1);
-        ArrayList<Double> weights = currentSet.getWeights();
-        boolean isMCQ = false; // placeholder mode selection
-        Boss bossview = new Boss(terms, definitions, weights, expBar);
-        return bossview;
-    }
+    // private Node buildBossScreen() {
+    //     VBox box = new VBox(10);
+    //     box.setPadding(new Insets(16));
+    //     Label title = new Label("Boss Battle");
+    //     if (currentSet == null || currentSet.getFlashcardSet() == null || currentSet.getFlashcardSet().size() < 2) {
+    //         box.getChildren().addAll(title, new Label("Pick a set on Home first."));
+    //         return box;
+    //     }
+    //     int count = 0;
+    //     try {
+    //         ArrayList<ArrayList<String>> s = currentSet.getFlashcardSet();
+    //         if (s != null && s.size() >= 2 && s.get(0) != null) {
+    //             count = s.get(0).size();
+    //         }
+    //     } catch (Exception ignored) {}
+    //     ArrayList<ArrayList<String>> cs = currentSet.getFlashcardSet();
+    //     ArrayList<String> terms = cs.get(0);
+    //     ArrayList<String> definitions = cs.get(1);
+    //     ArrayList<Double> weights = currentSet.getWeights();
+    //     boolean isMCQ = false; // placeholder mode selection
+    //     Boss bossview = new Boss(terms, definitions, weights, expBar);
+    //     return bossview;
+    // }
 
     private Node buildAccuracyScreen() {
         VBox box = new VBox(10);
