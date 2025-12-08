@@ -39,6 +39,8 @@ public class Learn extends VBox {
     private EXPBarUI expBar;
     private Random rng = new Random();
     private Soundplayer soundPlayer = new Soundplayer();
+    private Label streak;
+    private int correctStreak;
 
     public Learn(ArrayList<String> w, ArrayList<Double> we, ArrayList<String> d, EXPBarUI exp) {
         text = false;
@@ -47,6 +49,8 @@ public class Learn extends VBox {
         definitions = d;
         double maxWidth = 360;
         expBar = exp;
+        correctStreak = 0;
+        streak = new Label("Start a Streak!");
         setSpacing(10);
         setPadding(new Insets(16));
         modeToggle.getStyleClass().add("switch-button");
@@ -102,8 +106,7 @@ public class Learn extends VBox {
                 evaluateAnswer(ans);
             }
         });
-
-        getChildren().addAll(titleLabel, modeToggle, progressLabel, prompt, choicesBox, freeBox, feedback, nextBtn);
+        getChildren().addAll(titleLabel, modeToggle, progressLabel, streak, prompt, choicesBox, freeBox, feedback, nextBtn);
         nextQuestion();
     }
 
@@ -228,11 +231,18 @@ public class Learn extends VBox {
         totalAsked++;
         if (correctAns) {
             totalCorrect++;
+            correctStreak++;
             feedback.setText("Correct!");
             adjustWeight(currentIndex, true);
             soundPlayer.playCorrect();
-            expBar.addXP(5); //temp value for actually leveling up
+            expBar.addXP(10 + Math.max((correctStreak - 5) * 5, 0));  //temp value for actually leveling up
+            streak.setText("Current Streak: " + correctStreak);
+            if (isText()) {
+                expBar.addXP(10 + Math.max((correctStreak - 5) * 5, 0)); 
+            }
         } else {
+            correctStreak = 0;
+            streak.setText("Streak reset to 0!");
             feedback.setText("Incorrect. Correct answer: " + correct);
             adjustWeight(currentIndex, false);
             soundPlayer.playWrong();

@@ -58,7 +58,7 @@ public class Accuracy extends VBox {
         expBar = exp;
         timeline = new Timeline();
         addTime = 5;
-        XPadd = 5;
+        XPadd = 20;
         setSpacing(10);
         setPadding(new Insets(16));
         answer.getStyleClass().add("answer");
