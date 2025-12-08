@@ -23,7 +23,7 @@ public class Main extends Application {
     private Flashcards currentSet;
     // Default flashcard set
     ArrayList<String> default_terms = new ArrayList<>(Arrays.asList("Sus", "69", "Owen", "Jaden"));
-    ArrayList<String> default_definitions = new ArrayList<>(Arrays.asList("Short for 'suspicious', originating from Among Us", "OG funny number that came before 67", "Does too little, gay", "Doing too much"));
+    ArrayList<String> default_definitions = new ArrayList<>(Arrays.asList("Short for 'suspicious', originating from Among Us", "OG funny number that came before 67", "Does too little", "Doing too much"));
     Flashcards flashcards = new Flashcards(default_terms, default_definitions);
     private EXPBarUI expBar;
     @Override
@@ -275,8 +275,9 @@ public class Main extends Application {
         ArrayList<ArrayList<String>> cs = currentSet.getFlashcardSet();
         ArrayList<String> terms = cs.get(0);
         ArrayList<String> definitions = cs.get(1);
+        ArrayList<Double> weights = currentSet.getWeights();
         boolean isMCQ = false; // placeholder mode selection
-        Boss bossview = new Boss(terms, definitions, isMCQ);
+        Boss bossview = new Boss(terms, definitions, weights, expBar);
         return bossview;
     }
 

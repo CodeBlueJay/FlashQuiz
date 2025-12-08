@@ -143,7 +143,6 @@ public class Accuracy extends VBox {
         if (timeline != null) {
             timeline.stop();
         }
-        showTimer.setText(String.format("%.2f", time));
         timeline = new Timeline(new KeyFrame(Duration.millis(10), ev -> {
             time -= 0.01;
             if (time <= 0) {

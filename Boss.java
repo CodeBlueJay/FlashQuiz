@@ -21,6 +21,7 @@ public class Boss extends VBox {
     private int bossHealth;
     private ArrayList<String> words;
     private ArrayList<String> meanings;
+    private ArrayList<Double> weights;
     private boolean mcq;
     private int maxBoss;
     private int max;
@@ -30,8 +31,9 @@ public class Boss extends VBox {
     private final DoubleProperty playerProgress = new SimpleDoubleProperty(1);
     private Label playerHpUI;
     private Label bossHpUI;
+    private EXPBarUI xpBar;
 
-    public Boss(ArrayList<String> w, ArrayList<String> m, boolean isMcq) {
+    public Boss(ArrayList<String> w, ArrayList<String> m, ArrayList<Double> weight, EXPBarUI exp) {
         setSpacing(10);
         setPadding(new Insets(16));
         health = 5;
@@ -40,7 +42,8 @@ public class Boss extends VBox {
         maxBoss = bossHealth;
         words = w;
         meanings = m;
-        mcq = isMcq;
+        weights = weight;
+        xpBar = exp;
         bossHp = new ProgressBar(); 
         playerHp = new ProgressBar();
         bossHp.progressProperty().bind(bossProgress);
@@ -51,8 +54,9 @@ public class Boss extends VBox {
         Label info = new Label("Cards: " + (words != null ? words.size() : 0));
         HBox playerBar = new HBox(playerHpUI, playerHp);
         HBox bossBar = new HBox(bossHpUI, bossHp);
-        getChildren().addAll(title, info, playerBar, bossBar);
-        dmgBoss();
+        Learn learnView = new Learn(words, weights, meanings, xpBar);
+        getChildren().addAll(title, info, playerBar, bossBar, learnView);
+        
     }
 
     public void updateHp(Label progressUI, int hp, String object, int m) {

@@ -24,15 +24,17 @@ import javafx.scene.text.Font;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import javafx.scene.Node;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.animation.Animation;
 
 public class Matching extends VBox {
     private ArrayList<String> words;
     private ArrayList<String> meanings;
     private ArrayList<String> randomized;
-    private VBox bvox = new VBox(16);
-    private Label fail = new Label("unequal # of words and definitions");
     private Button wordButton = new Button();
     private Button meaningButton = new Button();
+    private Button startButton = new Button("Start");
     private ArrayList<Button> wordButtonList = new ArrayList<Button>();
     private ArrayList<Button> meaningButtonList = new ArrayList<Button>();
     private ArrayList<Button> randomizedButtonList = new ArrayList<Button>();
@@ -44,18 +46,32 @@ public class Matching extends VBox {
     private boolean check1 = false;
     private boolean check2 = false;
     private int rand;
+    private EXPBarUI xp;
+    private Timeline timeline;
+    private double time;
+    private double avgTime;
     // gui components
     private Label matchingLabel = new Label("Matching");
-    private Label feedback = new Label("");
-    private EXPBarUI xp;
+    private Label feedback = new Label("Click start to begin!");
+    private Label showTimer = new Label();
+    private Label fail = new Label("unequal # of words and definitions");
+    private VBox bvox = new VBox(16);    
+    private HBox timer = new HBox(2);
+    Font microwave;
 
     public Matching(ArrayList<String> w, ArrayList<String> m, EXPBarUI xpBar) {
         words = w;
         meanings = m;
         xp = xpBar;
         randomized = new ArrayList<String>(w);
+        time = 0;
+        avgTime = words.size() * 1.5;
         setSpacing(10);
         setPadding(new Insets(16));
+        microwave = Font.loadFont("file:fonts/microwave.ttf", 36);
+        showTimer.setText(String.format("%.2f", time));
+        showTimer.getStyleClass().add("timer");
+        showTimer.setFont(microwave);
         if (words.size() != meanings.size())
             bvox.getChildren().add(fail);
         else {
@@ -75,11 +91,19 @@ public class Matching extends VBox {
                 randomized.remove(rand);
             }
         }
-        getChildren().addAll(matchingLabel, bvox, feedback);
+        timer.getChildren().addAll(showTimer, startButton);
+        getChildren().addAll(matchingLabel, timer, feedback);
+
+        startButton.setOnAction(e -> {
+            getChildren().add(2, bvox);
+            startButton.setVisible(false);
+            stopwatch();
+        });
 
         for (int i = 0; i < meaningButtonList.size(); i++) {
             Button mb = meaningButtonList.get(i);
             mb.setOnAction(e -> {
+                feedback.setText("Selected " + mb.getText());
                 if (selectedMeaning != null) {
                     selectedMeaning.getStyleClass().remove("selected");
                 }
@@ -93,6 +117,7 @@ public class Matching extends VBox {
         for (int i = 0; i < randomizedButtonList.size(); i++) {  
             Button wb = randomizedButtonList.get(i);
             wb.setOnAction(e -> {
+                feedback.setText("Selected " + wb.getText());
                 if (selectedWord != null) {
                     selectedWord.getStyleClass().remove("selected");
                 }
@@ -104,6 +129,15 @@ public class Matching extends VBox {
             });
 
         }
+    }
+
+    public void stopwatch() {
+        timeline = new Timeline(new KeyFrame(Duration.millis(10), ev -> {
+            time += 0.01;
+            showTimer.setText(String.format("%.2f", time));
+        }));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
     }
 
     /** Needs to acount for: 
@@ -132,9 +166,19 @@ public class Matching extends VBox {
             feedback.setText("Well Done!");
             selectedWord.setVisible(false);
             selectedMeaning.setVisible(false);
+            meaningButtonList.remove(selectedMeaning);
+            if (meaningButtonList.size() == 0) {
+                xp.addXP(50);
+                feedback.setText("All matched!\nBonus 50 XP!\nClick Matching to try again.");
+                timeline.stop();
+                if (time < avgTime) {
+                    xp.addXP(50);
+                    feedback.setText("All matched quickly!\nBonus 100 XP!\nClick Matching to try again.");
+                }
+            }
         }
         else{
-            feedback.setText("Incorrect!");
+            feedback.setText("Incorrect! Try again.");
             // do NOT remove button1 and button2  
         }
         selectedMeaning = null;
