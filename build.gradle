@@ -1,0 +1,49 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+application {
+    mainClass = 'Main'
+}
+
+dependencies {
+    implementation 'org.openjfx:javafx-controls:17.0.2'
+    implementation 'org.openjfx:javafx-fxml:17.0.2'
+    implementation 'org.openjfx:javafx-media:17.0.2'
+}
+
+// Ensure JavaFX works when running via Gradle on Windows
+// Pass module-path and add-modules to the JavaExec task
+tasks.withType(JavaExec).configureEach {
+    def os = org.gradle.internal.os.OperatingSystem.current()
+    if (os.isWindows()) {
+        jvmArgs += [
+            '--module-path', file('javafx-backup/javafx-sdk-17.0.17/lib').absolutePath,
+            '--add-modules', 'javafx.controls,javafx.fxml,javafx.media'
+        ]
+    }
+}
+
+// Configure the shadow (fat) JAR
+shadowJar {
+    archiveBaseName.set('FlashcardQuiz')
+    archiveClassifier.set('')
+    mergeServiceFiles()
+}
+
+// Build the fat JAR on standard build
+build {
+    dependsOn shadowJar
+}

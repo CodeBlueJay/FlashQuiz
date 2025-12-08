@@ -70,7 +70,12 @@ rem Compute JavaFX native (bin) folder from selected lib path
 set "JAVAFX_BIN=%JAVAFX_REL:\lib=\bin%"
 echo JavaFX native folder: %JAVAFX_BIN%
 
-if not exist app.jar (
+rem Prefer Gradle fat jar if present; fallback to app.jar
+set "APP_JAR=app.jar"
+if exist "build\libs\FlashcardQuiz.jar" set "APP_JAR=build\libs\FlashcardQuiz.jar"
+if not exist "%APP_JAR%" (
+	echo Application JAR not found. Build it first.
+	echo If using Gradle: .\gradlew shadowJar
 	pause
 	exit /b 1
 )
@@ -105,18 +110,20 @@ mkdir "%RES_DIR%"
 if exist "styles.css" copy /y "styles.css" "%RES_DIR%\styles.css" >nul 2>&1
 if exist "sounds" xcopy "sounds" "%RES_DIR%\sounds" /E /I /Y >nul 2>&1
 if exist "fonts" xcopy "fonts" "%RES_DIR%\fonts" /E /I /Y >nul 2>&1
+rem bundle JavaFX native DLLs for software pipeline fallback
+if exist "%JAVAFX_BIN%" xcopy "%JAVAFX_BIN%" "%RES_DIR%\bin" /E /I /Y >nul 2>&1
 
 
 rem Create a minimal input folder for jpackage containing only the application jar
 set "INPUT_DIR=%TEMP%\fc-input"
 if exist "%INPUT_DIR%" rmdir /s /q "%INPUT_DIR%"
 mkdir "%INPUT_DIR%"
-copy /y "app.jar" "%INPUT_DIR%\" >nul 2>&1
+copy /y "%APP_JAR%" "%INPUT_DIR%\app.jar" >nul 2>&1
 
-rem Run jpackage directly and capture verbose output to a log for troubleshooting
+rem Run jpackage with JavaFX modules; do NOT use --runtime-image here so we can pass module-path/add-modules
 echo Running jpackage (this may take a while) - logging to %TEMP%\jpackage.log
-rem "%JPACKAGE%" --type %JPACKAGE_TYPE% --name Flashcards --app-version 1.0.0 --dest "%DEST%" --input "%INPUT_DIR%" --resource-dir "%CD%\%RES_DIR%" --main-jar app.jar --main-class Main --module-path "%CD%\%JAVAFX_REL%" --add-modules javafx.controls,javafx.fxml,javafx.media --java-options "--enable-native-access=javafx.graphics" --java-options "--enable-native-access=javafx.media" --java-options "-Dprism.order=sw" --java-options "-Dprism.forceGPU=false" --java-options "-Dprism.verbose=true" --java-options "-Djava.library.path=%CD%\%JAVAFX_BIN%" --win-console --verbose > "%TEMP%\jpackage.log" 2>&1
-"%JPACKAGE%" --type %JPACKAGE_TYPE% --name Flashcards --app-version 1.0.0 --dest "%DEST%" --input "%INPUT_DIR%" --resource-dir "%CD%\%RES_DIR%" --main-jar app.jar --main-class Main --module-path "%CD%\%JAVAFX_REL%" --add-modules javafx.controls,javafx.fxml,javafx.media --java-options "--enable-native-access=javafx.graphics" --java-options "--enable-native-access=javafx.media" --java-options "-Dprism.order=sw" --java-options "-Dprism.forceGPU=false" --java-options "-Dprism.verbose=true" --java-options "-Djava.library.path=%CD%\%JAVAFX_BIN%" --verbose > "%TEMP%\jpackage.log" 2>&1
+"%JPACKAGE%" --type %JPACKAGE_TYPE% --name Flashcards --app-version 1.0.0 --dest "%DEST%" --input "%INPUT_DIR%" --resource-dir "%CD%\%RES_DIR%" --main-jar app.jar --main-class Main --module-path "%CD%\%JAVAFX_REL%" --add-modules javafx.controls,javafx.fxml,javafx.media --java-options "-Dprism.order=sw" --java-options "-Dprism.forceGPU=false" --java-options "-Dprism.verbose=true" --java-options "-Djava.library.path=%APPDIR%\bin" --win-console --verbose > "%TEMP%\jpackage.log" 2>&1
+rem "%JPACKAGE%" --type %JPACKAGE_TYPE% --name Flashcards --app-version 1.0.0 --dest "%DEST%" --input "%INPUT_DIR%" --resource-dir "%CD%\%RES_DIR%" --main-jar app.jar --main-class Main --module-path "%CD%\%JAVAFX_REL%" --add-modules javafx.controls,javafx.fxml,javafx.media --java-options "--enable-native-access=javafx.graphics" --java-options "--enable-native-access=javafx.media" --java-options "-Dprism.order=sw" --java-options "-Dprism.forceGPU=false" --java-options "-Dprism.verbose=true" --java-options "-Djava.library.path=%CD%\%JAVAFX_BIN%" --verbose > "%TEMP%\jpackage.log" 2>&1
 rem Clean up temporary input and resource dirs
 if exist "%INPUT_DIR%" rmdir /s /q "%INPUT_DIR%"
 if exist "%RES_DIR%" rmdir /s /q "%RES_DIR%"
@@ -184,6 +191,15 @@ if not defined IMAGE_DIR (
 		)
 	)
 
+	rem Copy JavaFX native bin DLLs into image root
+	if exist "%RES_DIR%\bin" (
+		if "%USE_ROBOCOPY%"=="1" (
+			robocopy "%RES_DIR%\bin" "%IMAGE_DIR%\bin" * /E /NFL /NDL /NJH /NJS >nul
+		) else (
+			xcopy "%RES_DIR%\bin" "%IMAGE_DIR%\bin" /E /I /Y >nul 2>&1
+		)
+	)
+
 	echo Copied styles/sounds/fonts into %IMAGE_DIR%
 
 	rem Also copy into the app subfolder if present
@@ -207,6 +223,15 @@ if not defined IMAGE_DIR (
 				robocopy "fonts" "%IMAGE_DIR%\app\fonts" * /E /NFL /NDL /NJH /NJS >nul
 			) else (
 				xcopy "fonts" "%IMAGE_DIR%\app\fonts" /E /I /Y >nul 2>&1
+			)
+		)
+
+		rem Copy JavaFX native bin DLLs into app subfolder as well
+		if exist "%RES_DIR%\bin" (
+			if "%USE_ROBOCOPY%"=="1" (
+				robocopy "%RES_DIR%\bin" "%IMAGE_DIR%\app\bin" * /E /NFL /NDL /NJH /NJS >nul
+			) else (
+				xcopy "%RES_DIR%\bin" "%IMAGE_DIR%\app\bin" /E /I /Y >nul 2>&1
 			)
 		)
 		echo Also copied resources into %IMAGE_DIR%\app
