@@ -201,6 +201,13 @@
   -fx-padding: 0 8;
 }
 
+.levels-warning {
+  -fx-text-fill: #ff3b3b;
+  -fx-font-size: 20px;
+  -fx-font-weight: bold;
+  -fx-padding: 50px;
+}
+
 .no-cards {
   -fx-text-fill: #ff4b4b;
   -fx-font-size: 16px;
@@ -259,4 +266,3 @@
   -fx-min-height: 0;
   -fx-padding: 0;
 }
-

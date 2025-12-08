@@ -167,6 +167,7 @@ public class Main extends Application {
         // end temp button functionality test
         Label title = new Label("Flashcard Program Home");
         Label subtitle = new Label("Selected Set");
+        Label warning = new Label("WARNING: The XP bar will reset every time you close the Program.");
         VBox box = new VBox(12);
         box.setPadding(new Insets(16));
         FlowPane wrap = new FlowPane();
@@ -215,8 +216,8 @@ public class Main extends Application {
             int idx = Flashcards.IDs.indexOf(currentSet);
             if (idx < 0) idx = selectedIndex;
         }
-
-        box.getChildren().addAll(title, subtitle, wrap);
+        warning.getStyleClass().add("levels-warning");
+        box.getChildren().addAll(title, subtitle, wrap, warning);
         return box;
     }
 
