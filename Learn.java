@@ -60,6 +60,8 @@ public class Learn extends VBox {
         }
         freeBox.getChildren().addAll(answerField, submitBtn);
 
+        answerField.setOnAction(e -> submitBtn.fire());
+
         modeToggle.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -104,6 +106,9 @@ public class Learn extends VBox {
                     ans = answerField.getText().trim();
                 }
                 evaluateAnswer(ans);
+                if (isText()) {
+                    nextBtn.requestFocus();
+                }
             }
         });
         getChildren().addAll(titleLabel, modeToggle, progressLabel, streak, prompt, choicesBox, freeBox, feedback, nextBtn);
@@ -153,6 +158,8 @@ public class Learn extends VBox {
             freeBox.setManaged(true);
             choicesBox.setVisible(false);
             choicesBox.setManaged(false);
+            // focus the free response input so the user can type immediately
+            answerField.requestFocus();
         } else {
             freeBox.setVisible(false);
             freeBox.setManaged(false);

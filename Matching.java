@@ -58,14 +58,22 @@ public class Matching extends VBox {
     private VBox bvox = new VBox(16);    
     private HBox timer = new HBox(2);
     Font microwave;
+    private Soundplayer soundplayer = new Soundplayer();
 
     public Matching(ArrayList<String> w, ArrayList<String> m, EXPBarUI xpBar) {
         words = w;
         meanings = m;
         xp = xpBar;
-        randomized = new ArrayList<String>(w);
+        if (words == null) words = new ArrayList<String>();
+        if (meanings == null) meanings = new ArrayList<String>();
+        randomized = new ArrayList<String>(words);
         time = 0;
         avgTime = words.size() * 1.5;
+
+        if (words.size() == 0 || meanings.size() == 0) {
+            startButton.setDisable(true);
+            feedback.setText("No cards in the selected set");
+        }
         setSpacing(10);
         setPadding(new Insets(16));
         microwave = Font.loadFont("file:fonts/microwave.ttf", 36);
@@ -84,6 +92,7 @@ public class Matching extends VBox {
                 meaningButtonList.add(meaningButton);
                 rand = (int)(Math.random() * randomized.size());
                 randomizedButton = new Button(randomized.get(rand));
+                randomizedButton.getStyleClass().addAll("match-button", "match-meaning");
                 randomizedButtonList.add(randomizedButton);
                 HBox setWords = new HBox(2);
                 setWords.getChildren().addAll(randomizedButton, meaningButton);
@@ -164,6 +173,7 @@ public class Matching extends VBox {
         if (correct){
             xp.addXP(10);
             feedback.setText("Well Done!");
+            soundplayer.playCorrect();
             selectedWord.setVisible(false);
             selectedMeaning.setVisible(false);
             meaningButtonList.remove(selectedMeaning);
@@ -179,12 +189,22 @@ public class Matching extends VBox {
         }
         else{
             feedback.setText("Incorrect! Try again.");
+            soundplayer.playWrong();
             // do NOT remove button1 and button2  
         }
         selectedMeaning = null;
         selectedWord = null;
         button1.getStyleClass().remove("selected");
         button2.getStyleClass().remove("selected");
+    }
+
+    public boolean hasCards() {
+        return this.words != null && this.meanings != null && this.words.size() > 0 && this.meanings.size() > 0;
+    }
+
+    public void disableStartIfNoCards(Button startBtn) {
+        if (startBtn == null) return;
+        startBtn.setDisable(!hasCards());
     }
 }
 

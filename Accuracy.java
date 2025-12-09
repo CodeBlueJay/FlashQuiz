@@ -79,6 +79,23 @@ public class Accuracy extends VBox {
         timerButtons.getChildren().addAll(showTimer, start);
         getChildren().addAll(accuracylabel, score, timerButtons, container);
 
+        if (words == null) words = new ArrayList<String>();
+        if (meanings == null) meanings = new ArrayList<String>();
+        if (weights == null) weights = new ArrayList<Double>();
+
+        if (words.size() == 0 || meanings.size() == 0) {
+            feedback.setText("No cards in the selected set");
+            answer.setDisable(true);
+            submit.setDisable(true);
+            start.setDisable(true);
+            start.setVisible(false);
+            next.setDisable(true);
+            next.setVisible(false);
+            time = 0;
+            showTimer.setText(String.format("%.2f", time));
+            return;
+        }
+
         submit.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {

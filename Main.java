@@ -6,9 +6,13 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Label;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import java.util.Optional;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -334,7 +338,70 @@ public class Main extends Application {
             }
         });
 
-        box.getChildren().addAll(title, list);
+        Button createBtn = new Button("Create Set");
+        createBtn.getStyleClass().addAll("nav-button", "accent");
+        createBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                root.setCenter(new SetsEditor());
+            }
+        });
+
+        Button editBtn = new Button("Edit Set");
+        editBtn.getStyleClass().addAll("nav-button", "accent");
+        editBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                int sel = list.getSelectionModel().getSelectedIndex();
+                if (sel >= 0 && sel < Flashcards.IDs.size()) {
+                    root.setCenter(new SetsEditor(Flashcards.IDs.get(sel)));
+                } else {
+                    Alert info = new Alert(Alert.AlertType.INFORMATION);
+                    info.setTitle("Edit Set");
+                    info.setHeaderText(null);
+                    info.setContentText("Please select a set from the list to edit.");
+                    info.showAndWait();
+                }
+            }
+        });
+
+        Button deleteSetsBtn = new Button("Delete Set");
+        deleteSetsBtn.getStyleClass().addAll("nav-button", "danger");
+        deleteSetsBtn.setOnAction(e -> {
+            int sel = list.getSelectionModel().getSelectedIndex();
+            if (sel < 0 || sel >= Flashcards.IDs.size()) return;
+
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+            confirm.setTitle("Delete Set");
+            confirm.setHeaderText("Delete selected set");
+            confirm.setContentText("Are you sure you want to delete the selected set? This cannot be undone.");
+            Optional<ButtonType> res = confirm.showAndWait();
+            if (res.isPresent() && res.get() == ButtonType.OK) {
+                // Remove from model
+                Flashcards.IDs.remove(sel);
+                if (sel < Flashcards.titles.size()) Flashcards.titles.remove(sel);
+                // Remove from view
+                list.getItems().remove(sel);
+
+                // Adjust currentSet selection
+                if (currentSet != null && !Flashcards.IDs.contains(currentSet)) {
+                    if (!Flashcards.IDs.isEmpty()) {
+                        int newSel = Math.min(sel, Flashcards.IDs.size() - 1);
+                        currentSet = Flashcards.IDs.get(newSel);
+                        list.getSelectionModel().select(newSel);
+                    } else {
+                        currentSet = null;
+                    }
+                } else {
+                    int currentIdx = Flashcards.IDs.indexOf(currentSet);
+                    if (currentIdx >= 0) list.getSelectionModel().select(currentIdx);
+                }
+            }
+        });
+
+        HBox hbox = new HBox(8);
+        hbox.getChildren().addAll(createBtn, editBtn, deleteSetsBtn);
+        box.getChildren().addAll(title, list, hbox);
         return box;
     }
 
