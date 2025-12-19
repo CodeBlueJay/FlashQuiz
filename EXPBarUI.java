@@ -15,6 +15,8 @@ import javafx.util.Duration;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
 
 public class EXPBarUI extends HBox {
     private static EXPBarUI instance;
@@ -48,11 +50,21 @@ public class EXPBarUI extends HBox {
         setPadding(new Insets(4, 12, 4, 12));
         getChildren().addAll(level, progressBar, xpLabel);
         progressBar.progressProperty().bind(progress);
+        try {
+            int saved = DataStore.getXP("default");
+            if (saved > 0) initialXP = saved;
+        } catch (Throwable ignored) {}
         currentXP.addListener((obs, oldV, newV) -> updateProgress());
         maxXP.addListener((obs, oldV, newV) -> updateProgress());
         currentXP.set(initialXP);
         maxXP.set(max);
         updateProgress();
+        Animations.fadeIn(this);
+        currentXP.addListener((obs, o, n) -> {
+            try {
+                DataStore.saveXP("default", n.intValue());
+            } catch (Throwable ignored) {}
+        });
     }
 
     private void updateProgress() {

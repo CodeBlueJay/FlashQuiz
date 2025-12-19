@@ -91,11 +91,14 @@ public class Matching extends VBox {
                 meaningButton = new Button(meanings.get(i));
                 wordButton.getStyleClass().addAll("match-button", "match-word");
                 meaningButton.getStyleClass().addAll("match-button", "match-meaning");
+                Animations.applyButtonHover(wordButton);
+                Animations.applyButtonHover(meaningButton);
                 wordButtonList.add(wordButton);
                 meaningButtonList.add(meaningButton);
                 rand = (int)(Math.random() * randomized.size());
                 randomizedButton = new Button(randomized.get(rand));
                 randomizedButton.getStyleClass().addAll("match-button", "match-meaning");
+                Animations.applyButtonHover(randomizedButton);
                 randomizedButtonList.add(randomizedButton);
                 HBox setWords = new HBox(2);
                 setWords.getChildren().addAll(randomizedButton, meaningButton);
@@ -105,6 +108,7 @@ public class Matching extends VBox {
         }
         timer.getChildren().addAll(showTimer, startButton);
         getChildren().addAll(matchingLabel, timer, feedback);
+        Animations.fadeIn(this);
 
         startButton.setOnAction(e -> {
             getChildren().add(2, bvox);

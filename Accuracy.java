@@ -84,6 +84,10 @@ public class Accuracy extends VBox {
         container.getChildren().addAll(answer, definition, feedback, buttonBox);
         timerButtons.getChildren().addAll(showTimer, start);
         getChildren().addAll(accuracylabel, score, timerButtons, container);
+        Animations.fadeIn(this);
+        Animations.applyButtonHover(submit);
+        Animations.applyButtonHover(start);
+        Animations.applyButtonHover(next);
 
         if (words == null) words = new ArrayList<String>();
         if (meanings == null) meanings = new ArrayList<String>();

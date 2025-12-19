@@ -87,6 +87,15 @@ public class SetsEditor extends VBox {
 
         this.getChildren().addAll(heading, titleField, entryBox, listView, actions);
 
+        // small entrance animation and hover effects for buttons
+        Animations.fadeIn(this);
+        Animations.applyButtonHover(addBtn);
+        Animations.applyButtonHover(cancelEditBtn);
+        Animations.applyButtonHover(removeBtn);
+        Animations.applyButtonHover(editBtn);
+        Animations.applyButtonHover(clearBtn);
+        Animations.applyButtonHover(saveBtn);
+
         addBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {

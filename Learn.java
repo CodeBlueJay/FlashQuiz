@@ -61,6 +61,7 @@ public class Learn extends VBox {
         for (int i = 0; i < choiceBtns.length; i++) {
             choiceBtns[i].setMaxWidth(maxWidth);
             choiceBtns[i].getStyleClass().addAll("match-button");
+            Animations.applyButtonHover(choiceBtns[i]);
             choicesBox.getChildren().add(choiceBtns[i]);
         }
         freeBox.getChildren().addAll(answerField, submitBtn);
@@ -68,6 +69,11 @@ public class Learn extends VBox {
         answerField.getStyleClass().add("text-field");
         submitBtn.getStyleClass().add("primary");
         nextBtn.getStyleClass().add("primary");
+        Animations.applyButtonHover(submitBtn);
+        Animations.applyButtonHover(nextBtn);
+
+        // entrance animation for this view
+        Animations.fadeIn(this);
 
         answerField.setOnAction(e -> submitBtn.fire());
 

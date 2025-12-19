@@ -84,6 +84,9 @@ public class EXPBar extends Application {
         addMax.setOnAction(e -> expBar.addXP(expBar.getMaxXP()));
         Button reset = new Button("Reset XP");
         reset.setOnAction(e -> expBar.setXP(0));
+        Animations.applyButtonHover(add100);
+        Animations.applyButtonHover(addMax);
+        Animations.applyButtonHover(reset);
         expBar.setMaxXP(100);
         buttons.getChildren().addAll(add100, addMax, reset);
         root.getChildren().add(buttons);

@@ -55,6 +55,13 @@ public class Main extends Application {
         // bossBtn.getStyleClass().addAll("nav-button", "accent");
         accuracyBtn.getStyleClass().addAll("nav-button", "accent");
 
+        // add hover animations to nav buttons
+        Animations.applyButtonHover(homeBtn);
+        Animations.applyButtonHover(setsBtn);
+        Animations.applyButtonHover(learnBtn);
+        Animations.applyButtonHover(matchingBtn);
+        Animations.applyButtonHover(accuracyBtn);
+
         menu.getChildren().addAll(homeBtn, setsBtn, learnBtn, matchingBtn, accuracyBtn);
         root = new BorderPane();
         root.getStyleClass().add("root");
@@ -149,7 +156,7 @@ public class Main extends Application {
         // end temp button functionality test
         Label title = new Label("Flashcard Program Home");
         Label subtitle = new Label("Selected Set");
-        Label warning = new Label("WARNING: The XP bar will reset every time you close the Program.");
+        // Label warning = new Label("WARNING: The XP bar will reset every time you close the Program.");
         VBox box = new VBox(12);
         box.getStyleClass().add("app-container");
         title.getStyleClass().add("app-header");
@@ -179,6 +186,8 @@ public class Main extends Application {
             String name = (index < Flashcards.titles.size()) ? Flashcards.titles.get(index) : ("Set " + (index + 1));
             Button card = new Button(name + " - " + count + " cards");
             card.getStyleClass().add("set-card");
+            Animations.applyCardHover(card);
+            Animations.applyButtonHover(card);
             if (index == selectedIndex) {
                 card.getStyleClass().add("selected");
             }
@@ -202,8 +211,10 @@ public class Main extends Application {
             int idx = Flashcards.IDs.indexOf(currentSet);
             if (idx < 0) idx = selectedIndex;
         }
-        warning.getStyleClass().add("levels-warning");
-        box.getChildren().addAll(title, subtitle, wrap, warning);
+        // warning.getStyleClass().add("levels-warning");
+        // box.getChildren().addAll(title, subtitle, wrap, warning);
+        box.getChildren().addAll(title, subtitle, wrap);
+        Animations.fadeIn(box);
         return box;
     }
 
@@ -392,6 +403,7 @@ public class Main extends Application {
         HBox hbox = new HBox(8);
         hbox.getChildren().addAll(createBtn, editBtn, deleteSetsBtn);
         box.getChildren().addAll(title, list, hbox);
+        Animations.fadeIn(box);
         return box;
     }
 
