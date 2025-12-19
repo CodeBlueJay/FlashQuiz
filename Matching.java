@@ -76,6 +76,9 @@ public class Matching extends VBox {
         }
         setSpacing(10);
         setPadding(new Insets(16));
+        this.getStyleClass().add("app-container");
+        matchingLabel.getStyleClass().add("app-header");
+        feedback.getStyleClass().add("sub-title");
         microwave = Font.loadFont("file:fonts/microwave.ttf", 36);
         showTimer.setText(String.format("%.2f", time));
         showTimer.getStyleClass().add("timer");

@@ -42,6 +42,7 @@ public class EXPBarUI extends HBox {
         currentLevel = 1;
         xpLabel.getStyleClass().add("xp-label");
         level.getStyleClass().add("level-label");
+        progressBar.getStyleClass().add("progress-bar");
         setSpacing(8);
         setAlignment(Pos.CENTER);
         setPadding(new Insets(4, 12, 4, 12));

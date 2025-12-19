@@ -262,4 +262,45 @@ if not defined IMAGE_DIR (
 	rem If additional files need to be added into '%IMAGE_DIR%\app\project-sources', create
 	rem a safe snapshot first (see above) or place files into 'project-sources' before packaging.
 )
+
+	rem Copy JavaFX native binaries (prism_*.dll, vcruntime, etc.) into the image runtime bins
+	if defined JAVAFX_BIN (
+		if exist "%JAVAFX_BIN%" (
+			echo Copying JavaFX native binaries from %JAVAFX_BIN% into image runtime bins
+			rem Ensure runtime bin exists
+			if not exist "%IMAGE_DIR%\runtime\bin" mkdir "%IMAGE_DIR%\runtime\bin"
+			if exist "%IMAGE_DIR%\app" (
+				if not exist "%IMAGE_DIR%\app\runtime\bin" mkdir "%IMAGE_DIR%\app\runtime\bin"
+			)
+			rem Also ensure legacy "bin" locations exist (some jpackage layouts)
+			if not exist "%IMAGE_DIR%\bin" mkdir "%IMAGE_DIR%\bin"
+			if exist "%IMAGE_DIR%\app" (
+				if not exist "%IMAGE_DIR%\app\bin" mkdir "%IMAGE_DIR%\app\bin"
+			)
+			if "%USE_ROBOCOPY%"=="1" (
+				robocopy "%JAVAFX_BIN%" "%IMAGE_DIR%\runtime\bin" *.dll *.lib /NFL /NDL /NJH /NJS >nul
+				if exist "%IMAGE_DIR%\app" robocopy "%JAVAFX_BIN%" "%IMAGE_DIR%\app\runtime\bin" *.dll *.lib /NFL /NDL /NJH /NJS >nul
+				robocopy "%JAVAFX_BIN%" "%IMAGE_DIR%\bin" *.dll *.lib /NFL /NDL /NJH /NJS >nul
+				if exist "%IMAGE_DIR%\app" robocopy "%JAVAFX_BIN%" "%IMAGE_DIR%\app\bin" *.dll *.lib /NFL /NDL /NJH /NJS >nul
+			) else (
+				xcopy "%JAVAFX_BIN%\*.dll" "%IMAGE_DIR%\runtime\bin\" /Y /I >nul 2>&1
+				xcopy "%JAVAFX_BIN%\*.lib" "%IMAGE_DIR%\runtime\bin\" /Y /I >nul 2>&1
+				if exist "%IMAGE_DIR%\app" (
+					xcopy "%JAVAFX_BIN%\*.dll" "%IMAGE_DIR%\app\runtime\bin\" /Y /I >nul 2>&1
+					xcopy "%JAVAFX_BIN%\*.lib" "%IMAGE_DIR%\app\runtime\bin\" /Y /I >nul 2>&1
+				)
+				xcopy "%JAVAFX_BIN%\*.dll" "%IMAGE_DIR%\bin\" /Y /I >nul 2>&1
+				xcopy "%JAVAFX_BIN%\*.lib" "%IMAGE_DIR%\bin\" /Y /I >nul 2>&1
+				if exist "%IMAGE_DIR%\app" (
+					xcopy "%JAVAFX_BIN%\*.dll" "%IMAGE_DIR%\app\bin\" /Y /I >nul 2>&1
+					xcopy "%JAVAFX_BIN%\*.lib" "%IMAGE_DIR%\app\bin\" /Y /I >nul 2>&1
+				)
+			)
+			echo JavaFX native binaries copied into image.
+		) else (
+			echo WARNING: JavaFX native folder %JAVAFX_BIN% not found; skipping native copy
+		)
+	) else (
+		echo WARNING: JAVAFX_BIN not defined; skipping JavaFX native copy
+	)
 endlocal

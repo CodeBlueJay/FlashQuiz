@@ -51,14 +51,23 @@ public class Learn extends VBox {
         expBar = exp;
         correctStreak = 0;
         streak = new Label("Start a Streak!");
+        titleLabel.getStyleClass().add("app-header");
+        prompt.getStyleClass().add("sub-title");
+        progressLabel.getStyleClass().add("xp-label");
+        streak.getStyleClass().add("sub-title");
         setSpacing(10);
         setPadding(new Insets(16));
         modeToggle.getStyleClass().add("switch-button");
         for (int i = 0; i < choiceBtns.length; i++) {
             choiceBtns[i].setMaxWidth(maxWidth);
+            choiceBtns[i].getStyleClass().addAll("match-button");
             choicesBox.getChildren().add(choiceBtns[i]);
         }
         freeBox.getChildren().addAll(answerField, submitBtn);
+
+        answerField.getStyleClass().add("text-field");
+        submitBtn.getStyleClass().add("primary");
+        nextBtn.getStyleClass().add("primary");
 
         answerField.setOnAction(e -> submitBtn.fire());
 

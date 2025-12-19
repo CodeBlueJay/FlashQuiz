@@ -61,7 +61,10 @@ public class Accuracy extends VBox {
         XPadd = 20;
         setSpacing(10);
         setPadding(new Insets(16));
+        this.getStyleClass().add("app-container");
+        accuracylabel.getStyleClass().add("app-header");
         answer.getStyleClass().add("answer");
+        answer.getStyleClass().add("text-field");
         answer.setDisable(!started);
         answer.setOnAction(ev -> {
             if (!submit.isDisabled()) submit.fire();
@@ -71,6 +74,9 @@ public class Accuracy extends VBox {
         showTimer.getStyleClass().add("timer");
         score.getStyleClass().add("score");
         submit.setDisable(!started);
+        submit.getStyleClass().add("primary");
+        start.getStyleClass().add("accent");
+        next.getStyleClass().add("primary");
         if (microwave != null) {
             showTimer.setFont(microwave);
         }

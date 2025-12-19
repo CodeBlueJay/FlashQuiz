@@ -26,8 +26,8 @@ public class Main extends Application {
     private BorderPane root;
     private Flashcards currentSet;
     // Default flashcard set
-    ArrayList<String> default_terms = new ArrayList<>(Arrays.asList("Sus", "69", "Owen", "Jaden"));
-    ArrayList<String> default_definitions = new ArrayList<>(Arrays.asList("Short for 'suspicious', originating from Among Us", "OG funny number that came before 67", "Does too little", "Doing too much"));
+    ArrayList<String> default_terms = new ArrayList<>(Arrays.asList("CPU", "RAM", "SSD", "GPU"));
+    ArrayList<String> default_definitions = new ArrayList<>(Arrays.asList("Central Processing Unit", "Random Access Memory", "Solid State Drive", "Graphics Processing Unit"));
     Flashcards flashcards = new Flashcards(default_terms, default_definitions);
     private EXPBarUI expBar;
     @Override
@@ -37,29 +37,6 @@ public class Main extends Application {
         flashcards.addFlashcardSet(flashcards);
         if (!Flashcards.IDs.isEmpty()) {
             Flashcards.titles.set(Flashcards.IDs.size()-1, "Default Set");
-        }
-
-        // Two test sets
-        ArrayList<String> t2 = new ArrayList<>(Arrays.asList("Dog", "Cat", "Bird"));
-        ArrayList<String> d2 = new ArrayList<>(Arrays.asList("Canine", "Feline", "Avian"));
-        Flashcards set2 = new Flashcards(t2, d2);
-        set2.addFlashcardSet(set2);
-        if (!Flashcards.IDs.isEmpty()) {
-            Flashcards.titles.set(Flashcards.IDs.size()-1, "Animals");
-        }
-        ArrayList<String> t3 = new ArrayList<>(Arrays.asList("CPU", "RAM", "SSD", "GPU"));
-        ArrayList<String> d3 = new ArrayList<>(Arrays.asList("Processor", "Memory", "Storage", "Graphics"));
-        Flashcards set3 = new Flashcards(t3, d3);
-        set3.addFlashcardSet(set3);
-        if (!Flashcards.IDs.isEmpty()) {
-            Flashcards.titles.set(Flashcards.IDs.size()-1, "Computer Parts");
-        }
-        ArrayList<String> t4 = new ArrayList<>(Arrays.asList());
-        ArrayList<String> d4 = new ArrayList<>(Arrays.asList());
-        Flashcards set4 = new Flashcards(t4, d4);
-        set4.addFlashcardSet(set4);
-        if (!Flashcards.IDs.isEmpty()) {
-            Flashcards.titles.set(Flashcards.IDs.size()-1, "Empty List");
         }
 
         VBox menu = new VBox(10);
@@ -80,6 +57,7 @@ public class Main extends Application {
 
         menu.getChildren().addAll(homeBtn, setsBtn, learnBtn, matchingBtn, accuracyBtn);
         root = new BorderPane();
+        root.getStyleClass().add("root");
         
         expBar = EXPBarUI.getInstance();
         root.setTop(expBar);
@@ -173,8 +151,12 @@ public class Main extends Application {
         Label subtitle = new Label("Selected Set");
         Label warning = new Label("WARNING: The XP bar will reset every time you close the Program.");
         VBox box = new VBox(12);
+        box.getStyleClass().add("app-container");
+        title.getStyleClass().add("app-header");
+        subtitle.getStyleClass().add("sub-title");
         box.setPadding(new Insets(16));
         FlowPane wrap = new FlowPane();
+        wrap.getStyleClass().add("card-grid");
         wrap.setHgap(12);
         wrap.setVgap(12);
 
@@ -228,7 +210,9 @@ public class Main extends Application {
     private Node buildLearnScreen() {
         VBox box = new VBox(10);
         box.setPadding(new Insets(16));
+        box.getStyleClass().add("app-container");
         Label title = new Label("Learn");
+        title.getStyleClass().add("app-header");
 
         if (currentSet == null || currentSet.getFlashcardSet() == null || currentSet.getFlashcardSet().size() < 2) {
             box.getChildren().addAll(title, new Label("Pick a set on Home first."));
@@ -244,9 +228,11 @@ public class Main extends Application {
     }
 
         private Node buildMatchingScreen() {
-        VBox box = new VBox(10);
-        box.setPadding(new Insets(16));
-        Label title = new Label("Matching");
+            VBox box = new VBox(10);
+            box.setPadding(new Insets(16));
+            box.getStyleClass().add("app-container");
+            Label title = new Label("Matching");
+            title.getStyleClass().add("app-header");
         if (currentSet == null || currentSet.getFlashcardSet() == null || currentSet.getFlashcardSet().size() < 2) {
             return box;
         }
@@ -289,7 +275,9 @@ public class Main extends Application {
     private Node buildAccuracyScreen() {
         VBox box = new VBox(10);
         box.setPadding(new Insets(16));
+        box.getStyleClass().add("app-container");
         Label title = new Label("Accuracy Challenge");
+        title.getStyleClass().add("app-header");
         if (currentSet == null || currentSet.getFlashcardSet() == null || currentSet.getFlashcardSet().size() < 2) {
             box.getChildren().addAll(title, new Label("Pick a set on Home first."));
             return box;
@@ -307,7 +295,9 @@ public class Main extends Application {
         box.setPadding(new Insets(16));
 
         Label title = new Label("Sets");
+        title.getStyleClass().add("app-header");
         ListView<String> list = new ListView<>();
+        list.getStyleClass().add("sets-list");
 
         int index = 1;
         for (Flashcards fc : Flashcards.IDs) {

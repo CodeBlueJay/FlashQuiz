@@ -49,29 +49,40 @@ public class SetsEditor extends VBox {
         this.setPadding(new Insets(12));
 
         Label heading = new Label("Create / Edit Set");
+        heading.getStyleClass().add("app-header");
         titleField = new TextField();
+        titleField.getStyleClass().add("text-field");
         titleField.setPromptText("Set title (optional)");
 
         HBox entryBox = new HBox(8);
         termField = new TextField();
+        termField.getStyleClass().add("text-field");
         termField.setPromptText("Term");
         termField.setPrefWidth(200);
         defField = new TextField();
+        defField.getStyleClass().add("text-field");
         defField.setPromptText("Definition");
         defField.setPrefWidth(300);
         Button addBtn = new Button("Add Card");
+        addBtn.getStyleClass().add("accent");
         cancelEditBtn = new Button("Cancel");
+        cancelEditBtn.getStyleClass().add("danger");
         cancelEditBtn.setVisible(false);
         entryBox.getChildren().addAll(termField, defField, addBtn, cancelEditBtn);
 
         listView = new ListView<>();
+        listView.getStyleClass().add("sets-list");
         listView.setPrefHeight(200);
 
         HBox actions = new HBox(8);
         Button removeBtn = new Button("Remove Selected");
+        removeBtn.getStyleClass().add("danger");
         Button editBtn = new Button("Edit Selected");
+        editBtn.getStyleClass().add("accent");
         Button clearBtn = new Button("Clear All");
+        clearBtn.getStyleClass().add("danger");
         saveBtn = new Button("Save Set");
+        saveBtn.getStyleClass().add("primary");
         actions.getChildren().addAll(removeBtn, editBtn, clearBtn, saveBtn);
 
         this.getChildren().addAll(heading, titleField, entryBox, listView, actions);
