@@ -11,20 +11,50 @@ Features
 
 Getting started
 
-1. Install Java 17+ (or the version your `run.bat` expects).
+Prerequisites
 
-1. From project root run in PowerShell:
+- Java 17+ installed and available on `PATH` (or the JDK version you prefer).
+- JavaFX SDK matching your JDK (if running outside the bundled scripts).
+
+Run (development)
+
+From the project root you can run the app quickly (development mode):
 
 ```powershell
 .\run.bat
 ```
 
-1. If you prefer to run manually, compile and run with module path to JavaFX libs (example):
+Compile / Package (release build)
 
-```bash
-javac -d out --module-path javafx-sdk/lib --add-modules javafx.controls,javafx.fxml src\*.java
-java --module-path javafx-sdk/lib --add-modules javafx.controls,javafx.fxml -cp out Main
+To compile and create a packaged release use the provided scripts:
+
+```powershell
+.\compile.bat
+.\package.bat
 ```
+
+These scripts wrap the project compilation and packaging steps. If you only want to compile without packaging, run `compile.bat`. (This will only compile the project into a .jar file)
+
+Manual compile / run (without scripts)
+
+If you prefer to compile manually, include JavaFX on the module path. Example (adjust paths for your JavaFX SDK location):
+
+```powershell
+javac -d out --module-path "javafx-sdk/lib" --add-modules javafx.controls,javafx.fxml src\*.java
+java --module-path "javafx-sdk/lib" --add-modules javafx.controls,javafx.fxml -cp out Main
+```
+
+Releases
+
+Prebuilt releases are available at the project's releases page:
+
+https://github.com/CodeBlueJay/FlashQuiz/releases/latest
+
+Notes about data persistence
+
+- The app attempts to persist XP to a local SQLite database file `data.db` (uses `sqlite-jdbc` if present on the classpath). If SQLite is not available it falls back to a simple `data.properties` file.
+- To enable the SQLite option include a compatible `sqlite-jdbc` jar in the runtime classpath (for example add to `lib/` and update `run.bat` if needed).
+
 
 How the project is organized
 
